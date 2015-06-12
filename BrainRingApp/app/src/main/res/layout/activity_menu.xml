@@ -52,7 +52,8 @@
                 android:id="@+id/button3"
                 android:layout_marginTop="20dp"
                 android:fontFamily="Segoe UI"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:background="#33c" />
         </LinearLayout>
 
     </LinearLayout>
