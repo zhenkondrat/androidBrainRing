@@ -28,6 +28,10 @@
             android:name=".Client.TeamInGameActivity"
             android:label="@string/title_activity_team_in_game" >
         </activity>
+        <activity
+            android:name=".Client.TeamActivity"
+            android:label="@string/title_activity_team" >
+        </activity>
     </application>
 
 </manifest>
