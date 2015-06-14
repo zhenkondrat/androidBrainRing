@@ -17,15 +17,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateGameActivity"
+            android:name=".Server.CreateGameActivity"
             android:label="@string/title_activity_create_game" >
         </activity>
         <activity
-            android:name=".SingInGameActivity"
+            android:name=".Client.SingInGameActivity"
             android:label="@string/title_activity_sing_in_game" >
         </activity>
         <activity
-            android:name=".TeamInGameActivity"
+            android:name=".Client.TeamInGameActivity"
             android:label="@string/title_activity_team_in_game" >
         </activity>
     </application>
