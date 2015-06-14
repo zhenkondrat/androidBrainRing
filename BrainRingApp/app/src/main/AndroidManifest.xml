@@ -24,6 +24,10 @@
             android:name=".SingInGameActivity"
             android:label="@string/title_activity_sing_in_game" >
         </activity>
+        <activity
+            android:name=".TeamInGameActivity"
+            android:label="@string/title_activity_team_in_game" >
+        </activity>
     </application>
 
 </manifest>
