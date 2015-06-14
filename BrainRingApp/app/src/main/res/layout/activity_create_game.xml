@@ -36,16 +36,18 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New CheckBox"
+                android:text="Не отключать подсветку"
                 android:id="@+id/checkBox"
-                android:textSize="18DPdp" />
+                android:textSize="18DPdp"
+                android:checked="true" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New CheckBox"
+                android:text="Не блокировать"
                 android:id="@+id/checkBox2"
-                android:textSize="18DPdp" />
+                android:textSize="18DPdp"
+                android:checked="true" />
         </LinearLayout>
 
         <LinearLayout
