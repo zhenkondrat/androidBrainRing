@@ -22,7 +22,7 @@ public class SingInGameActivity extends Activity {
 
         Button btn;
         //button create game
-        btn = (Button) findViewById(R.id.button);
+        btn = (Button) findViewById(R.id.button7);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
