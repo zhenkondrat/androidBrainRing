@@ -1,5 +1,6 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import com.example.zhenkondrat.brainringapp.R;
 import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
 
 
-public class SingInGameActivity extends ActionBarActivity {
+public class SingInGameActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

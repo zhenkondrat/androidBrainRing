@@ -1,5 +1,6 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,7 +9,7 @@ import android.view.MenuItem;
 import com.example.zhenkondrat.brainringapp.R;
 
 
-public class CreateGameActivity extends ActionBarActivity {
+public class CreateGameActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
