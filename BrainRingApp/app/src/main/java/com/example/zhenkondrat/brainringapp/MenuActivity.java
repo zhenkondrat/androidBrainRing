@@ -1,9 +1,15 @@
 package com.example.zhenkondrat.brainringapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.example.zhenkondrat.brainringapp.Client.SingInGameActivity;
+import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
 
 
 public class MenuActivity extends ActionBarActivity {
@@ -12,6 +18,29 @@ public class MenuActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        Button btn;
+        //button create game
+        btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuActivity.this, CreateGameActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
+        //button singin game
+        btn = (Button) findViewById(R.id.button2);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuActivity.this, SingInGameActivity.class);
+
+                startActivity(intent);
+            }
+        });
     }
 
 
