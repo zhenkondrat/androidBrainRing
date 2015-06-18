@@ -42,6 +42,17 @@ public class MenuActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        //button singin game
+        btn = (Button) findViewById(R.id.button3);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuActivity.this, TestActivity.class);
+
+                startActivity(intent);
+            }
+        });
     }
 
 

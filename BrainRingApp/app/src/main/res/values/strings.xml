@@ -7,4 +7,5 @@
     <string name="title_activity_sing_in_game">SingInGameActivity</string>
     <string name="title_activity_team_in_game">TeamInGameActivity</string>
     <string name="title_activity_team">TeamActivity</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>
