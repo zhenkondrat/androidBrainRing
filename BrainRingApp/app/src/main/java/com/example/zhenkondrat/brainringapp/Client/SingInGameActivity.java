@@ -31,6 +31,18 @@ public class SingInGameActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        //button search
+        btn = (Button) findViewById(R.id.button8);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //SearchServers ss = new SearchServers(getBaseContext());
+                Thread cThread = new Thread(new SearchServers(getBaseContext()));
+                cThread.start();
+                //ss.scan();
+            }
+        });
     }
 
 
