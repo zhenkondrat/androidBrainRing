@@ -10,8 +10,9 @@ public class Member {
     private boolean sound;
     private boolean blick;
 
-    public Member()
+    public Member(String _name)
     {
+        name = _name;
         light=true;
         block=true;
         sound=false;

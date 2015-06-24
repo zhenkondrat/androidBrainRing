@@ -8,4 +8,7 @@
     <string name="title_activity_team_in_game">TeamInGameActivity</string>
     <string name="title_activity_team">TeamActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_round_editor">RoundEditor</string>
+    <string name="title_activity_round_editor_default">RoundEditorDefault</string>
+    <string name="title_activity_round_editor_va_bank">RoundEditorVaBank</string>
 </resources>
