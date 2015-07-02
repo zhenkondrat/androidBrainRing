@@ -13,4 +13,5 @@
     <string name="title_activity_round_editor_va_bank">RoundEditorVaBank</string>
     <string name="title_activity_guid">GuidActivity</string>
     <string name="title_activity_main_game">MainGameActivity</string>
+    <string name="title_activity_clients_list">ClientsListActivity</string>
 </resources>
