@@ -20,7 +20,7 @@ import java.util.Enumeration;
  */
 public class ServerThread implements Runnable {
     // DEFAULT IP
-    public static String SERVERIP = "10.0.2.15";
+    public static String SERVERIP = "192.168.231.101";
     Context context;
 
     // DESIGNATE A PORT

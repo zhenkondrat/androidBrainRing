@@ -1,6 +1,9 @@
 package com.example.zhenkondrat.brainringapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.zhenkondrat.brainringapp.Client.ClientThread;
+import com.example.zhenkondrat.brainringapp.Client.SearchServers;
 import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
 import com.example.zhenkondrat.brainringapp.Server.ServerThread;
 
@@ -52,7 +56,15 @@ public class TestActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 if (!ClientThread.connected) {
-                    ClientThread.serverIpAddress = ServerThread.SERVERIP;
+                    WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+
+                    WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+                    int myIp = myWifiInfo.getIpAddress();
+                    //ip = SearchServers.toIP(myIp);
+                    String s = "";
+                    s = SearchServers.toIP(myIp);
+                    ClientThread.serverIpAddress = s;
+                    Log.d("-------", s);
                     if (!ClientThread.serverIpAddress.equals("")) {
                         Thread cThread = new Thread(new ClientThread());
                         cThread.start();

@@ -59,7 +59,7 @@ public class SearchServers implements Runnable  {
         }
     }
 
-    public String toIP(int myIp) {
+    public static String toIP(int myIp) {
 
         int intMyIp3 = myIp/0x1000000;
         int intMyIp3mod = myIp%0x1000000;

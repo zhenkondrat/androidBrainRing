@@ -4,7 +4,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.UsualRound;
+import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class RoundEditorVaBank extends ActionBarActivity {
@@ -13,6 +20,30 @@ public class RoundEditorVaBank extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_editor_va_bank);
+
+
+        Button btn = (Button) findViewById(R.id.button17);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText ed = (EditText) findViewById(R.id.editText3);
+                VaBankRound vbr = new VaBankRound(ed.getText().toString());
+
+                ed = (EditText) findViewById(R.id.editText4);
+                vbr.setTimeQuestion(Integer.parseInt(ed.getText().toString()));
+
+                ed = (EditText) findViewById(R.id.editText5);
+                vbr.setMaxBet(Integer.parseInt(ed.getText().toString()));
+
+                ed = (EditText) findViewById(R.id.editText6);
+                vbr.setMinBet(Integer.parseInt(ed.getText().toString()));
+
+                PublicData.rounds.add(vbr);
+
+                finish();
+            }
+
+        });
     }
 
 

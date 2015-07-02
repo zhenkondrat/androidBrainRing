@@ -17,37 +17,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Название игры"
-                android:id="@+id/textView"
-                android:textSize="18dp" />
-
-            <EditText
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText"
-                android:textSize="18dp" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Не отключать подсветку"
-                android:id="@+id/checkBox"
-                android:textSize="18dp"
-                android:checked="true" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Не блокировать"
-                android:id="@+id/checkBox2"
-                android:textSize="18dp"
-                android:checked="true" />
+                android:layout_height="200dp"
+                android:id="@+id/imageView4"
+                android:src="@drawable/logo" />
         </LinearLayout>
 
         <LinearLayout

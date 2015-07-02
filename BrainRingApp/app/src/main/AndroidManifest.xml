@@ -53,6 +53,14 @@
             android:name=".Server.RoundEditorVaBank"
             android:label="@string/title_activity_round_editor_va_bank" >
         </activity>
+        <activity
+            android:name=".Server.GuidActivity"
+            android:label="@string/title_activity_guid" >
+        </activity>
+        <activity
+            android:name=".Server.MainGameActivity"
+            android:label="@string/title_activity_main_game" >
+        </activity>
     </application>
 
 </manifest>

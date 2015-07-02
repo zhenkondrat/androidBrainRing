@@ -1,9 +1,12 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.zhenkondrat.brainringapp.R;
 
@@ -13,6 +16,27 @@ public class RoundEditor extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_editor);
+
+        Button btn;
+        //button usual round
+        btn = (Button) findViewById(R.id.button15);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RoundEditor.this, RoundEditorDefault.class);
+                startActivity(intent);
+            }
+        });
+
+        //button vabank round
+        btn = (Button) findViewById(R.id.button16);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RoundEditor.this, RoundEditorVaBank.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

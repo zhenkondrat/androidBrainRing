@@ -20,18 +20,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="Название раунда"
                 android:id="@+id/textView6" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText3" />
+                android:id="@+id/editText3"
+                android:gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="Время на вопрос"
                 android:id="@+id/textView7" />
 
             <EditText
@@ -39,12 +40,14 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText4" />
+                android:id="@+id/editText4"
+                android:text="60"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="Максимальная ставка"
                 android:id="@+id/textView8" />
 
             <EditText
@@ -52,12 +55,15 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText5" />
+                android:id="@+id/editText5"
+                android:text="10"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="Минимальная ставка"
                 android:id="@+id/textView9" />
 
             <EditText
@@ -65,12 +71,15 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText6" />
+                android:id="@+id/editText6"
+                android:text="1"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="Сохранить"
                 android:id="@+id/button17" />
 
         </LinearLayout>

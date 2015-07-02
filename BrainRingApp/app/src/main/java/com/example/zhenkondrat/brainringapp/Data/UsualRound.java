@@ -15,6 +15,7 @@ public class UsualRound extends Round {
 
     public UsualRound(String name_round)
     {
+        super();
         this.nameRound = name_round;
         countQuestion = 10;
         noLimit = false;
@@ -24,6 +25,7 @@ public class UsualRound extends Round {
         acceptSequel = true;
         countTry = 1;
         showStatistic = false;
+
     }
 
     public int getCountQuestion() {

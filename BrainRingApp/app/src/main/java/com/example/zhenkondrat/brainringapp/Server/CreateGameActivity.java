@@ -1,6 +1,7 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,30 +12,47 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.zhenkondrat.brainringapp.Data.Leader;
+import com.example.zhenkondrat.brainringapp.Data.Member;
+import com.example.zhenkondrat.brainringapp.Data.Round;
 import com.example.zhenkondrat.brainringapp.R;
+
+import java.util.ArrayList;
 
 
 public class CreateGameActivity extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
 
-        Button btn = (Button) findViewById(R.id.button6);
+        Button btn = (Button) findViewById(R.id.button4);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Leader leader = new Leader();
+                Intent intent = new Intent(CreateGameActivity.this, RoundEditor.class);
+                startActivity(intent);
+            }
 
-                EditText ed = (EditText) findViewById(R.id.editText);
-                leader.setGameName(ed.getText().toString());
+        });
 
-                CheckBox ch = (CheckBox) findViewById(R.id.checkBox);
-                leader.setLight(ch.isChecked());
+        btn = (Button) findViewById(R.id.button5);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateGameActivity.this, GuidActivity.class);
+                startActivity(intent);
+            }
 
-                ch = (CheckBox) findViewById(R.id.checkBox2);
-                leader.setBlock(ch.isChecked());
+        });
+
+        btn = (Button) findViewById(R.id.button6);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateGameActivity.this, MainGameActivity.class);
+                startActivity(intent);
             }
 
         });

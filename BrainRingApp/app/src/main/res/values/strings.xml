@@ -11,4 +11,6 @@
     <string name="title_activity_round_editor">RoundEditor</string>
     <string name="title_activity_round_editor_default">RoundEditorDefault</string>
     <string name="title_activity_round_editor_va_bank">RoundEditorVaBank</string>
+    <string name="title_activity_guid">GuidActivity</string>
+    <string name="title_activity_main_game">MainGameActivity</string>
 </resources>
