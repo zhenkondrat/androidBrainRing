@@ -4,13 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.R;
 import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
+
+import java.util.ArrayList;
 
 
 public class SingInGameActivity extends Activity {
@@ -19,6 +28,7 @@ public class SingInGameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_in_game);
+
 
         Button btn;
         //button create game
@@ -45,7 +55,54 @@ public class SingInGameActivity extends Activity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        LinearLayout linLayout = (LinearLayout) findViewById(R.id.linLayout);
+        linLayout.removeAllViews();
+        if (ClientPublicData.servers.size()==0)
+        {
+            TextView tw = new TextView(getBaseContext());
+            tw.setText("\t Server not find");
+            linLayout.addView(tw);
+        }
+        else {
+
+            LayoutInflater ltInflater = getLayoutInflater();
+
+            for (int i = 0; i < ClientPublicData.servers.size(); i++) {
+                if (ClientPublicData.servers.get(i)!="") {
+                    View item = ltInflater.inflate(R.layout.item, linLayout, false);
+                    //TextView tv1 = (TextView) item.findViewById(R.id.tvName);
+                    TextView tv2 = (TextView) item.findViewById(R.id.tvTime);
+                    item.setTag(i);
+                    item.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+//                            Intent intent = new Intent(ListReceptsActivity.this, ReceptActivity.class);
+//                            Log.v("push", String.valueOf(view.getTag()));
+//                            intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+//                            startActivity(intent);
+                        }
+                    });
+
+                    //tv1.setText("Name Of Game");
+                    tv2.setText("IP: " + ClientPublicData.servers.get(i));
+
+                    item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    //item.setBackgroundColor(colors[0]);
+                    linLayout.addView(item);
+                }
+            }
+        }
+        Log.v("---", "show list");
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

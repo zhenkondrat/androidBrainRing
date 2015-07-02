@@ -53,6 +53,7 @@ public class RoundEditorDefault extends ActionBarActivity {
                 ur.setShowStatistic(ch.isChecked());
 
                 PublicData.rounds.add(ur);
+                PublicData.writeLog();
 
                 finish();
             }

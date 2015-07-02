@@ -49,7 +49,8 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:background="#467"></LinearLayout>
+                android:background="#467"
+                android:id="@+id/linLayout"></LinearLayout>
 
         </LinearLayout>
 

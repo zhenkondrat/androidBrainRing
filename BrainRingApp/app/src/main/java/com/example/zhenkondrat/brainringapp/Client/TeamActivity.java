@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Leader;
 import com.example.zhenkondrat.brainringapp.Data.Member;
 import com.example.zhenkondrat.brainringapp.R;
@@ -21,12 +22,30 @@ public class TeamActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team);
 
+        EditText ed = (EditText) findViewById(R.id.editText2);
+        ed.setText(ClientPublicData.member.getName());
+
+        CheckBox ch = (CheckBox) findViewById(R.id.checkBox4);
+        ch.setChecked(ClientPublicData.member.isLight());
+
+        ch = (CheckBox) findViewById(R.id.checkBox5);
+        ch.setChecked(ClientPublicData.member.isBlock());
+
+        ch = (CheckBox) findViewById(R.id.checkBox6);
+        ch.setChecked(ClientPublicData.member.isSound());
+
+        ch = (CheckBox) findViewById(R.id.checkBox3);
+        ch.setChecked(ClientPublicData.member.isBlick());
+
         Button btn = (Button) findViewById(R.id.button10);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Member member =  ClientPublicData.member;
+
                 EditText ed = (EditText) findViewById(R.id.editText2);
-                Member member = new Member(ed.getText().toString());
+                member.setName(ed.getText().toString());
 
                 CheckBox ch = (CheckBox) findViewById(R.id.checkBox4);
                 member.setLight(ch.isChecked());
@@ -39,6 +58,10 @@ public class TeamActivity extends Activity {
 
                 ch = (CheckBox) findViewById(R.id.checkBox3);
                 member.setBlick(ch.isChecked());
+
+                ClientPublicData.member = member;
+
+                finish();
             }
 
         });

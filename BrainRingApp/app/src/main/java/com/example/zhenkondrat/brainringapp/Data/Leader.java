@@ -14,6 +14,12 @@ public class Leader {
         block=true;
     }
 
+    public Leader(String n)
+    {
+        gameName = n;
+        light=true;
+        block=true;
+    }
     public String getGameName() {
         return gameName;
     }

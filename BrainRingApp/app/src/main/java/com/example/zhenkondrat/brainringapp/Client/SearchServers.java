@@ -5,6 +5,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Server.ServerThread;
 
 import java.io.IOException;
@@ -21,10 +22,9 @@ import java.util.Enumeration;
  */
 public class SearchServers implements Runnable  {
     private String ip;
-    private ArrayList<String> servers;
 
     public SearchServers(Context context){
-        servers = new ArrayList<String>();
+        ClientPublicData.servers = new ArrayList<String>();
         Log.d("SearchServer", "Create");
         //ip = getLocalIpAddress();
         WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
@@ -50,7 +50,7 @@ public class SearchServers implements Runnable  {
 
             try {
                 Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
-                servers.add(ip.concat(String.valueOf(i)));
+                ClientPublicData.servers.add(ip.concat(String.valueOf(i)));
                 Log.d("connect", ip.concat(String.valueOf(i)));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -58,6 +58,8 @@ public class SearchServers implements Runnable  {
             }
         }
     }
+
+
 
     public static String toIP(int myIp) {
 

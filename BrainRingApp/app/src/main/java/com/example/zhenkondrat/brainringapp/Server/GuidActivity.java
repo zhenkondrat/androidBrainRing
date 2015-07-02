@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.zhenkondrat.brainringapp.Data.Leader;
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class GuidActivity extends ActionBarActivity {
@@ -33,6 +34,11 @@ public class GuidActivity extends ActionBarActivity {
 
                 ch = (CheckBox) findViewById(R.id.checkBox11);
                 leader.setBlock(ch.isChecked());
+
+                PublicData.leader = leader;
+                PublicData.writeLog();
+
+                finish();
             }
 
         });

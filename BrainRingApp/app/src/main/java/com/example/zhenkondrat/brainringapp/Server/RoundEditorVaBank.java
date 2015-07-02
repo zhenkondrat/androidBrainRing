@@ -39,6 +39,7 @@ public class RoundEditorVaBank extends ActionBarActivity {
                 vbr.setMinBet(Integer.parseInt(ed.getText().toString()));
 
                 PublicData.rounds.add(vbr);
+                PublicData.writeLog();
 
                 finish();
             }

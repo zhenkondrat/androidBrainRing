@@ -50,4 +50,12 @@ public class Member {
     public void setBlick(boolean blick) {
         this.blick = blick;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
