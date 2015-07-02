@@ -370,6 +370,12 @@ public class MainGameActivity extends ActionBarActivity {
                 startActivity(intent);
                 Log.v("---","---");
                 break;
+            case R.id.members:
+                Intent inten = new Intent(MainGameActivity.this, ClientsListActivity.class);
+                Log.v("---", "---");
+                startActivity(inten);
+                Log.v("---","---");
+                break;
         }
 
         return super.onOptionsItemSelected(item);

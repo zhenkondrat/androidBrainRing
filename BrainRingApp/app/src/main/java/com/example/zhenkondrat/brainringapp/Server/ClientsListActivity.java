@@ -45,7 +45,7 @@ public class ClientsListActivity extends ActionBarActivity {
         if (PublicData.clients.size()==0)
         {
             TextView tw = new TextView(getBaseContext());
-            tw.setText("\t Server not find");
+            tw.setText("\t Not yet clients");
             linLayout.addView(tw);
         }
         else {
