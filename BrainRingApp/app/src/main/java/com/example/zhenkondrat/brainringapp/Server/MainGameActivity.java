@@ -15,8 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class MainGameActivity extends ActionBarActivity {
@@ -289,6 +295,60 @@ public class MainGameActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+//        if (PublicData.leader.isLight())
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        else
+//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        LinearLayout linLayout = (LinearLayout) findViewById(R.id.linLayout);
+        linLayout.removeAllViews();
+        if (PublicData.rounds.size()==0)
+        {
+            TextView tw = new TextView(getBaseContext());
+            tw.setText("\t Server not find");
+            linLayout.addView(tw);
+        }
+        else {
+
+            LayoutInflater ltInflater = getLayoutInflater();
+
+            for (int i = 0; i < PublicData.rounds.size(); i++) {
+                if (PublicData.rounds.get(i).toString()!="") {
+                    View item = ltInflater.inflate(R.layout.itemrounds, linLayout, false);
+                    TextView tv1 = (TextView) item.findViewById(R.id.tvID);
+                    TextView tv2 = (TextView) item.findViewById(R.id.tvType);
+                    item.setTag(i);
+                    item.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+//                            Intent intent = new Intent(SingInGameActivity.this, TeamInGameActivity.class);
+//                            ClientPublicData.selectServer = String.valueOf(view.getTag());
+//                            Log.v("push", String.valueOf(view.getTag()));
+//                            //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+//                            startActivity(intent);
+                        }
+                    });
+
+                    tv1.setText(PublicData.rounds.get(i).getNameRound());
+
+                    if(PublicData.rounds.get(i).getClass().toString().indexOf("UsualRound")>=0)
+                    tv2.setText("Default");
+
+                    if(PublicData.rounds.get(i).getClass().toString().indexOf("VaBank")>=0)
+                        tv2.setText("Va Bank");
+
+                    item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    //item.setBackgroundColor(colors[0]);
+                    linLayout.addView(item);
+                }
+            }
+        }
+        Log.v("---", "show list");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

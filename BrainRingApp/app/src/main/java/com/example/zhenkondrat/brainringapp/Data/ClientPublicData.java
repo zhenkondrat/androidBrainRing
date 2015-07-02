@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public class ClientPublicData {
     public static ArrayList<String> servers = new ArrayList<String>();
     public static Member member = new Member("None");
+    public static String selectServer;
 }

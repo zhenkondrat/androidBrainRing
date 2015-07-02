@@ -18,4 +18,12 @@ public abstract class Round {
     {
         questions.add(q);
     }
+
+    public String getNameRound() {
+        return nameRound;
+    }
+
+    public void setNameRound(String nameRound) {
+        this.nameRound = nameRound;
+    }
 }

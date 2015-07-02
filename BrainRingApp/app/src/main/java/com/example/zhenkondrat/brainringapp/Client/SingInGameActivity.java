@@ -81,14 +81,15 @@ public class SingInGameActivity extends Activity {
                     View item = ltInflater.inflate(R.layout.item, linLayout, false);
                     //TextView tv1 = (TextView) item.findViewById(R.id.tvName);
                     TextView tv2 = (TextView) item.findViewById(R.id.tvTime);
-                    item.setTag(i);
+                    item.setTag(ClientPublicData.servers.get(i));
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-//                            Intent intent = new Intent(ListReceptsActivity.this, ReceptActivity.class);
-//                            Log.v("push", String.valueOf(view.getTag()));
-//                            intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
-//                            startActivity(intent);
+                            Intent intent = new Intent(SingInGameActivity.this, TeamInGameActivity.class);
+                            ClientPublicData.selectServer = String.valueOf(view.getTag());
+                            Log.v("push", String.valueOf(view.getTag()));
+                            //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+                            startActivity(intent);
                         }
                     });
 
