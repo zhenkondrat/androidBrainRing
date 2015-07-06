@@ -70,6 +70,14 @@
             android:name=".Server.ServerQuestionActivity"
             android:label="@string/title_activity_server_question" >
         </activity>
+        <activity
+            android:name=".Server.AgreeQuestionActivity"
+            android:label="@string/title_activity_agree_question" >
+        </activity>
+        <activity
+            android:name=".Server.VaBankActivity"
+            android:label="@string/title_activity_va_bank" >
+        </activity>
     </application>
 
 </manifest>

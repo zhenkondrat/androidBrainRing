@@ -1,31 +1,18 @@
-package com.example.zhenkondrat.brainringapp.Client;
+package com.example.zhenkondrat.brainringapp.Server;
 
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.zhenkondrat.brainringapp.Data.Client;
-import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Server.ServerThread;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
- * Created by zhEnkondrat on 18.06.2015.
+ * Created by zhEnkondrat on 06.07.2015.
  */
-public class ClientThread implements Runnable {
+public class ServerClient implements Runnable {
     public static String serverIpAddress = "";
     public static String data="";
 
@@ -36,8 +23,8 @@ public class ClientThread implements Runnable {
     public void run() {
         try {
             InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
-            Log.d("ClientActivity", "C: Connecting..."+serverIpAddress);
-            Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
+            Log.d("ClientActivity", "C: Connecting..." + serverIpAddress);
+            Socket socket = new Socket(serverAddr, 4445);
             connected = true;
             //while (connected) {
             if (connected) {
@@ -52,7 +39,7 @@ public class ClientThread implements Runnable {
                     Log.e("ClientActivity", "S: Error", e);
                 }
             }
-           // socket.close();
+            // socket.close();
             Log.d("ClientActivity", "C: Closed.");
         } catch (Exception e) {
             Log.e("ClientActivity", "C: Error", e);
@@ -61,6 +48,3 @@ public class ClientThread implements Runnable {
         connected = false;
     }
 }
-
-
-

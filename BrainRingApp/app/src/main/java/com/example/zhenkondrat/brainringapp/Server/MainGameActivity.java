@@ -360,11 +360,17 @@ public class MainGameActivity extends ActionBarActivity {
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-//                            Intent intent = new Intent(SingInGameActivity.this, TeamInGameActivity.class);
-//                            ClientPublicData.selectServer = String.valueOf(view.getTag());
-//                            Log.v("push", String.valueOf(view.getTag()));
-//                            //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
-//                            startActivity(intent);
+                            Intent intent = null;
+                            if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("UsualRound")>=0) {
+                                intent = new Intent(MainGameActivity.this, ServerQuestionActivity.class);
+                                intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+                            }
+
+                            //if(PublicData.rounds.get(i).getClass().toString().indexOf("VaBank")>=0)
+                            //ClientPublicData.selectServer = String.valueOf(view.getTag());
+                            //Log.v("push", String.valueOf(view.getTag()));
+
+                            startActivity(intent);
                         }
                     });
 

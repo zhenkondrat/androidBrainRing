@@ -15,4 +15,6 @@
     <string name="title_activity_main_game">MainGameActivity</string>
     <string name="title_activity_clients_list">ClientsListActivity</string>
     <string name="title_activity_server_question">ServerQuestionActivity</string>
+    <string name="title_activity_agree_question">AgreeQuestionActivity</string>
+    <string name="title_activity_va_bank">VaBankActivity</string>
 </resources>
