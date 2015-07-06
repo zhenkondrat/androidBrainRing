@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,15 +30,17 @@ public class TestActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        ServerThread.SERVERIP = getLocalIpAddress();
+
         Button btn;
         //button create game
         btn = (Button) findViewById(R.id.button11);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+                WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+                int myIp = myWifiInfo.getIpAddress();
+                ServerThread.SERVERIP = SearchServers.toIP(myIp);
                 Thread fst = new Thread(new ServerThread());
                 fst.start();
             }

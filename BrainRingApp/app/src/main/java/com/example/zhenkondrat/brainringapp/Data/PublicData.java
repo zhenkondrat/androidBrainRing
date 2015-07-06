@@ -20,4 +20,17 @@ public class PublicData {
         Log.v("CountRounD", String.valueOf( rounds.size()));
         Log.v("CountClient", String.valueOf( clients.size()));
     }
+
+    public  static void UpdateClientsInList()
+    {
+        for (int i = 0; i < PublicData.clients.size(); i++){
+            for (int j = i+1; j < PublicData.clients.size(); j++)
+                if (PublicData.clients.get(i).getIp()==PublicData.clients.get(j).getIp())
+                {
+                    PublicData.clients.remove(j);
+                    UpdateClientsInList();
+                    return;
+                }
+        }
+    }
 }

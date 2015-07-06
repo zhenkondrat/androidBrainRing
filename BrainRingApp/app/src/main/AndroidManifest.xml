@@ -66,6 +66,10 @@
             android:name=".Server.ClientsListActivity"
             android:label="@string/title_activity_clients_list" >
         </activity>
+        <activity
+            android:name=".Server.ServerQuestionActivity"
+            android:label="@string/title_activity_server_question" >
+        </activity>
     </application>
 
 </manifest>

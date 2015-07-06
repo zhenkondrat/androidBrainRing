@@ -16,6 +16,7 @@ import java.net.Socket;
  */
 public class ClientThread implements Runnable {
     public static String serverIpAddress = "";
+    public static String data="";
 
     public static boolean connected = false;
 
@@ -24,26 +25,28 @@ public class ClientThread implements Runnable {
     public void run() {
         try {
             InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
-            Log.d("ClientActivity", "C: Connecting...");
+            Log.d("ClientActivity", "C: Connecting..."+serverIpAddress);
             Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
             connected = true;
-            while (connected) {
+            //while (connected) {
+            if (connected) {
                 try {
                     Log.d("ClientActivity", "C: Sending command.");
                     PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket
                             .getOutputStream())), true);
                     // WHERE YOU ISSUE THE COMMANDS
-                    out.println("Hey Server!");
-                    Log.d("ClientActivity", "C: Sent.");
+                    out.println(data);
+                    Log.d("ClientActivity", "C: Sent.->"+data);
                 } catch (Exception e) {
                     Log.e("ClientActivity", "S: Error", e);
                 }
             }
-            socket.close();
+           // socket.close();
             Log.d("ClientActivity", "C: Closed.");
         } catch (Exception e) {
             Log.e("ClientActivity", "C: Error", e);
-            connected = false;
+
         }
+        connected = false;
     }
 }

@@ -1,7 +1,10 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -20,10 +23,16 @@ import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Client.SearchServers;
 import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 public class MainGameActivity extends ActionBarActivity {
 
@@ -31,6 +40,16 @@ public class MainGameActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
+        ServerThread.SERVERIP = getLocalIpAddress();
+        WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+
+        WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+        int myIp = myWifiInfo.getIpAddress();
+        ServerThread.SERVERIP = SearchServers.toIP(myIp);
+        Log.v("MainGA: ", ServerThread.SERVERIP);
+        //start server socket
+        Thread fst = new Thread(new ServerThread());
+        fst.start();
 
         ActionBar supportActionBar = getSupportActionBar();
 //       supportActionBar.show();
@@ -293,6 +312,22 @@ public class MainGameActivity extends ActionBarActivity {
                         ActionBar.LayoutParams.WRAP_CONTENT,
                         Gravity.END | Gravity.RIGHT));
 
+    }
+
+    // GETS THE IP ADDRESS OF YOUR PHONE'S NETWORK
+    private String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.getHostAddress().toString(); }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e("ServerActivity", ex.toString());
+        }
+        return null;
     }
 
     @Override

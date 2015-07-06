@@ -1,5 +1,6 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -10,6 +11,7 @@ import com.example.zhenkondrat.brainringapp.Server.ServerThread;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
@@ -22,8 +24,9 @@ import java.util.Enumeration;
  */
 public class SearchServers implements Runnable  {
     private String ip;
+    private Activity activiy;
 
-    public SearchServers(Context context){
+    public SearchServers(Activity context){
         ClientPublicData.servers = new ArrayList<String>();
         Log.d("SearchServer", "Create");
         //ip = getLocalIpAddress();
@@ -32,13 +35,15 @@ public class SearchServers implements Runnable  {
         WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
         int myIp = myWifiInfo.getIpAddress();
         ip = toIP(myIp);
+        ClientPublicData.clientIP = ip;
         Log.d("SearchServer", "setIP ="+ip);
+        activiy = context;
     }
 
     public void scan()
     {
         ip = ip.substring(0, ip.lastIndexOf('.')+1);
-        for(int i=97;i<255;i++)
+        for(int i=2;i<255;i++)
         {
             InetAddress serverAddr = null;
             try {
@@ -49,8 +54,12 @@ public class SearchServers implements Runnable  {
             }
 
             try {
-                Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
+//                Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(serverAddr, ServerThread.SERVERPORT),100);
+                socket.close();
                 ClientPublicData.servers.add(ip.concat(String.valueOf(i)));
+                ((SingInGameActivity)activiy).finish();
                 Log.d("connect", ip.concat(String.valueOf(i)));
             } catch (IOException e) {
                 e.printStackTrace();

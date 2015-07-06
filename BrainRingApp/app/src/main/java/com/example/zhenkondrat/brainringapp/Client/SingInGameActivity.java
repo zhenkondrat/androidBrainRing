@@ -23,12 +23,14 @@ import java.util.ArrayList;
 
 
 public class SingInGameActivity extends Activity {
+    private Activity act;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_in_game);
 
+        act = this;
 
         Button btn;
         //button create game
@@ -48,22 +50,15 @@ public class SingInGameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 //SearchServers ss = new SearchServers(getBaseContext());
-                Thread cThread = new Thread(new SearchServers(getBaseContext()));
+                Thread cThread = new Thread(new SearchServers(act));
                 cThread.start();
                 //ss.scan();
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //display sunshy all time
-        if (ClientPublicData.member.isLight())
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        else
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+    public void UpdateList()
+    {
         LinearLayout linLayout = (LinearLayout) findViewById(R.id.linLayout);
         linLayout.removeAllViews();
         if (ClientPublicData.servers.size()==0)
@@ -102,6 +97,18 @@ public class SingInGameActivity extends Activity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        UpdateList();
         Log.v("---", "show list");
     }
     @Override

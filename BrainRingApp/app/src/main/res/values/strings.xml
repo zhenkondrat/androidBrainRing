@@ -14,4 +14,5 @@
     <string name="title_activity_guid">GuidActivity</string>
     <string name="title_activity_main_game">MainGameActivity</string>
     <string name="title_activity_clients_list">ClientsListActivity</string>
+    <string name="title_activity_server_question">ServerQuestionActivity</string>
 </resources>

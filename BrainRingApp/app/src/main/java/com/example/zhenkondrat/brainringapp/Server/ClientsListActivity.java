@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class ClientsListActivity extends ActionBarActivity {
-
+    int i;//index from cycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +53,13 @@ public class ClientsListActivity extends ActionBarActivity {
 
             LayoutInflater ltInflater = getLayoutInflater();
 
-            for (int i = 0; i < PublicData.clients.size(); i++) {
+            PublicData.UpdateClientsInList();
+
+            for (i = 0; i < PublicData.clients.size(); i++) {
                 if (PublicData.clients.get(i).getName()!="") {
-                    View item = ltInflater.inflate(R.layout.itemrounds, linLayout, false);
-                    TextView tv1 = (TextView) item.findViewById(R.id.tvID);
-                    TextView tv2 = (TextView) item.findViewById(R.id.tvType);
+                    View item = ltInflater.inflate(R.layout.itemclient, linLayout, false);
+                    TextView tv1 = (TextView) item.findViewById(R.id.tvIDnew);
+                  //  TextView tv2 = (TextView) item.findViewById(R.id.tvType);
                     item.setTag(i);
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -70,7 +73,40 @@ public class ClientsListActivity extends ActionBarActivity {
                     });
 
                     tv1.setText(PublicData.clients.get(i).getName());
-                    tv2.setText(PublicData.clients.get(i).getIp());
+                  //  tv2.setText(PublicData.clients.get(i).getIp());
+
+                    Button btn = (Button) item.findViewById(R.id.button20);
+                    btn.setTag(i);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PublicData.clients.remove(Integer.parseInt(view.getTag().toString()));
+                            Log.v("delete el", String.valueOf(Integer.parseInt(view.getTag().toString())));
+                            onResume();
+                        }
+                    });
+
+                    btn = (Button) item.findViewById(R.id.button21);
+                    btn.setTag(i);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PublicData.clients.get(Integer.parseInt(view.getTag().toString())).setZayavka(3);
+                            Log.v("green el", String.valueOf(Integer.parseInt(view.getTag().toString())));
+                            onResume();
+                        }
+                    });
+
+                    btn = (Button) item.findViewById(R.id.button22);
+                    btn.setTag(i);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PublicData.clients.get(Integer.parseInt(view.getTag().toString())).setZayavka(1);
+                            Log.v("cyan el", String.valueOf(Integer.parseInt(view.getTag().toString())));
+                            onResume();
+                        }
+                    });
 
                     switch (PublicData.clients.get(i).getZayavka())
                     {

@@ -4,7 +4,11 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.example.zhenkondrat.brainringapp.Data.Client;
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,6 +26,7 @@ public class ServerThread implements Runnable {
     // DEFAULT IP
     public static String SERVERIP = "192.168.231.101";
     Context context;
+    public String line = null;
 
     // DESIGNATE A PORT
     public static final int SERVERPORT = 4444;
@@ -31,6 +36,7 @@ public class ServerThread implements Runnable {
     private ServerSocket serverSocket;
 
     public void run() {
+
         try {
             if (SERVERIP != null) {
                 handler.post(new Runnable() {
@@ -39,31 +45,42 @@ public class ServerThread implements Runnable {
                         Log.v("Listening on IP: ", SERVERIP);
                     }
                 });
+
+                Log.v("Listening on IP1: ", SERVERIP);
                 serverSocket = new ServerSocket(SERVERPORT);
                 while (true) {
                     // LISTEN FOR INCOMING CLIENTS
-                    Socket client = serverSocket.accept();
+                    final Socket client = serverSocket.accept();
+                    line = null;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             Log.v("Connected.", "true");
+                            Log.v("clientIP", client.getInetAddress().toString());
+                            Log.v("serverIP", serverSocket.getInetAddress().toString());
+                            Log.v("serverIP2", SERVERIP);
                         }
                     });
-
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                        String line = null;
+
                         while ((line = in.readLine()) != null) {
                             Log.d("ServerActivity", line);
+
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // DO WHATEVER YOU WANT TO THE FRONT END
-                                    // THIS IS WHERE YOU CAN BE CREATIVE
+
                                 }
                             });
+                            break;
                         }
-                        break;
+
+                        PublicData.clients.add(new Client(line.substring(0,line.indexOf("@")),line.substring(line.indexOf("@") + 1, line.length())));
+
+                        Log.v("client", line.substring(0, line.indexOf("@")));
+                        Log.v("client", line.substring(line.indexOf("@") + 1, line.length()));
+                        //break;
                     } catch (Exception e) {
                         handler.post(new Runnable() {
                             @Override
@@ -109,7 +126,7 @@ public class ServerThread implements Runnable {
         return null;
     }
 
-    private String getIP(){
+    public String getIP(){
         WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
         WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();

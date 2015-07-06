@@ -11,6 +11,13 @@ public class Client {
     public Client()
     {
         name="None";
+        zayavka=1;
+    }
+
+    public Client(String n, String ip)
+    {
+        name="None";
+        zayavka=1;
     }
 
     public String getName() {
