@@ -39,7 +39,7 @@ public class ServerClient implements Runnable {
                     Log.e("ClientActivity", "S: Error", e);
                 }
             }
-            // socket.close();
+            socket.close();
             Log.d("ClientActivity", "C: Closed.");
         } catch (Exception e) {
             Log.e("ClientActivity", "C: Error", e);

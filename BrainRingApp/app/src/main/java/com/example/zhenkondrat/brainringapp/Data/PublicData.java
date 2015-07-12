@@ -27,9 +27,9 @@ public class PublicData {
     {
         for (int i = 0; i < PublicData.clients.size(); i++){
             for (int j = i+1; j < PublicData.clients.size(); j++)
-                if (PublicData.clients.get(i).getIp()==PublicData.clients.get(j).getIp())
+                if (PublicData.clients.get(i).getIp().equals(PublicData.clients.get(j).getIp()))
                 {
-                    PublicData.clients.remove(j);
+                    PublicData.clients.remove(i);Log.v("UpdateClientsInList", "-=-=-");
                     UpdateClientsInList();
                     return;
                 }

@@ -1,6 +1,7 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import java.net.SocketException;
 import java.util.Enumeration;
 
@@ -24,7 +26,7 @@ import java.util.Enumeration;
 public class ClientServer implements Runnable {
     // DEFAULT IP
     public static String SERVERIP = "192.168.231.101";
-    Context context;
+    public static TeamInGameActivity context;
     public String line = null;
 
     // DESIGNATE A PORT
@@ -46,7 +48,7 @@ public class ClientServer implements Runnable {
                 });
 
                 Log.v("Listening on IP1: ", SERVERIP);
-                serverSocket = new ServerSocket(SERVERPORT);
+                serverSocket = new ServerSocket(4445);
                 while (true) {
                     // LISTEN FOR INCOMING CLIENTS
                     final Socket client = serverSocket.accept();
@@ -54,17 +56,17 @@ public class ClientServer implements Runnable {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.v("Connected.", "true");
-                            Log.v("clientIP", client.getInetAddress().toString());
-                            Log.v("serverIP", serverSocket.getInetAddress().toString());
-                            Log.v("serverIP2", SERVERIP);
+                            Log.v("CLConnected.", "true");
+                            Log.v("CLclientIP", client.getInetAddress().toString());
+                            Log.v("CLserverIP", serverSocket.getInetAddress().toString());
+                            Log.v("CLserverIP2", SERVERIP);
                         }
                     });
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
                         while ((line = in.readLine()) != null) {
-                            Log.d("ServerActivity", line);
+                            Log.v("ServerActivity-----", line);
 
                             handler.post(new Runnable() {
                                 @Override
@@ -74,22 +76,34 @@ public class ClientServer implements Runnable {
                             });
                             break;
                         }
-
-                        switch (line)
-                        {
-                            case "red":
-                                break;
-                            case "blue":
-                                break;
-                            case "green":
-                                break;
-                            case "remoney":
-                                break;
-                            case "say":
-                                break;
-                            case "start":
-                                break;
-                        }
+                        Intent intent = null;
+                        if(line!=null)
+                            switch (line)
+                            {
+                                case "red":
+                                    break;
+                                case "you_blue":
+                                    intent = new Intent( this.context, ClientVaBankActivity.class);
+//                                    ClientPublicData.selectServer = String.valueOf(view.getTag());
+                                    Log.v("aaaaaa", "aaaaaaaa");
+//                                    //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+                                    context.startActivity(intent);
+                                    break;
+                                case "you_green":
+                                    intent = new Intent( this.context, ClientDefRoundActivity.class);
+//                                    ClientPublicData.selectServer = String.valueOf(view.getTag());
+                                    Log.v("aaaaaa", "aaaaaaaa");
+//                                    //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+                                    context.startActivity(intent);
+                                    break;
+                                case "remoney":
+                                    break;
+                                case "say":
+                                    Log.d("ClientServerActivity", "Say");
+                                    break;
+                                case "start":
+                                    break;
+                            }
 
                          //break;
                     } catch (Exception e) {
@@ -121,21 +135,7 @@ public class ClientServer implements Runnable {
         }
     }
 
-    // GETS THE IP ADDRESS OF YOUR PHONE'S NETWORK
-    private String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.getHostAddress().toString(); }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e("ServerActivity", ex.toString());
-        }
-        return null;
-    }
+
 
     public String getIP(){
         WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);

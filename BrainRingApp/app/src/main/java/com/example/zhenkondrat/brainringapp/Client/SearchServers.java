@@ -44,6 +44,7 @@ public class SearchServers implements Runnable  {
     {
         ip = ip.substring(0, ip.lastIndexOf('.')+1);
         for(int i=2;i<255;i++)
+        //for(int i=92;i<105;i++)
         {
             InetAddress serverAddr = null;
             try {

@@ -13,8 +13,23 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Client.ClientServer;
+import com.example.zhenkondrat.brainringapp.Client.SearchServers;
+import com.example.zhenkondrat.brainringapp.Client.SingInGameActivity;
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.R;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ClientsListActivity extends ActionBarActivity {
     int i;//index from cycle
@@ -22,6 +37,7 @@ public class ClientsListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients_list);
+
     }
 
 
@@ -40,7 +56,10 @@ public class ClientsListActivity extends ActionBarActivity {
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        else
 //            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        PublicData.UpdateClientsInList();
+        ServerToClient.command = Command.call_clients;
+        Thread cThread = new Thread(new ServerToClient());
+        cThread.start();
         LinearLayout linLayout = (LinearLayout) findViewById(R.id.linLayout);
         linLayout.removeAllViews();
         if (PublicData.clients.size()==0)
@@ -53,7 +72,7 @@ public class ClientsListActivity extends ActionBarActivity {
 
             LayoutInflater ltInflater = getLayoutInflater();
 
-            PublicData.UpdateClientsInList();
+
 
             for (i = 0; i < PublicData.clients.size(); i++) {
                 if (PublicData.clients.get(i).getName()!="") {
@@ -108,6 +127,8 @@ public class ClientsListActivity extends ActionBarActivity {
                         }
                     });
 
+
+
                     switch (PublicData.clients.get(i).getZayavka())
                     {
                         case 1:
@@ -130,6 +151,7 @@ public class ClientsListActivity extends ActionBarActivity {
         Log.v("---", "show list");
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -144,4 +166,7 @@ public class ClientsListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

@@ -11,24 +11,21 @@
         android:icon="@drawable/ico"
         android:title="2"
         android:orderInCategory="200" app:showAsAction="always"/>
-    <item android:id="@+id/clipboard"
+    <item android:id="@+id/start"
         android:icon="@drawable/logo"
         android:title="3"
         android:orderInCategory="200" app:showAsAction="always"/>
 
-    <item android:id="@+id/spices"
-    android:icon="@drawable/logo"
-    android:title="4"
-    app:showAsAction="always"/>
+    <item android:id="@+id/finish"
+        android:icon="@drawable/logo"
+        android:title="4"
+        app:showAsAction="always"/>
 
-    <item android:id="@+id/adds"
+    <item android:id="@+id/statistic"
         android:icon="@drawable/logo"
         android:title="5"
         app:showAsAction="always"/>
-    <item android:id="@+id/price"
-        android:icon="@drawable/logo"
-        android:title="6"
-        app:showAsAction="always"/>
+
 
 
 

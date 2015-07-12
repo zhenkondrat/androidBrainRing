@@ -78,6 +78,18 @@
             android:name=".Server.VaBankActivity"
             android:label="@string/title_activity_va_bank" >
         </activity>
+        <activity
+            android:name=".Client.ClientDefRoundActivity"
+            android:label="@string/title_activity_client_def_round" >
+        </activity>
+        <activity
+            android:name=".Client.ClientVaBankActivity"
+            android:label="@string/title_activity_client_va_bank" >
+        </activity>
+        <activity
+            android:name=".Server.ServerVaBankActivity"
+            android:label="@string/title_activity_server_va_bank" >
+        </activity>
     </application>
 
 </manifest>

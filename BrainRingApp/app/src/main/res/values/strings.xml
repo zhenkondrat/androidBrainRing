@@ -17,4 +17,7 @@
     <string name="title_activity_server_question">ServerQuestionActivity</string>
     <string name="title_activity_agree_question">AgreeQuestionActivity</string>
     <string name="title_activity_va_bank">VaBankActivity</string>
+    <string name="title_activity_client_def_round">ClientDefRoundActivity</string>
+    <string name="title_activity_client_va_bank">ClientVaBankActivity</string>
+    <string name="title_activity_server_va_bank">ServerVaBankActivity</string>
 </resources>

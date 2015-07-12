@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
 import com.example.zhenkondrat.brainringapp.Client.SearchServers;
 import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
@@ -363,6 +364,10 @@ public class MainGameActivity extends ActionBarActivity {
                             Intent intent = null;
                             if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("UsualRound")>=0) {
                                 intent = new Intent(MainGameActivity.this, ServerQuestionActivity.class);
+                                intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+                            }
+                            if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("VaBank")>=0) {
+                                intent = new Intent(MainGameActivity.this, ServerVaBankActivity.class);
                                 intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
                             }
 

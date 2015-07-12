@@ -21,11 +21,13 @@ import com.example.zhenkondrat.brainringapp.Server.RoundEditor;
 
 public class TeamInGameActivity extends Activity {
 
+    private TeamInGameActivity tiga;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_in_game);
 //set team name
+        tiga = this;
         TextView tv = (TextView)findViewById(R.id.textView3);
         tv.setText(ClientPublicData.member.getName());
 //send mess
@@ -44,6 +46,9 @@ public class TeamInGameActivity extends Activity {
                         cThread.start();
                     }
                 }
+                ClientServer.context = tiga;//getBaseContext();
+                Thread fst = new Thread(new ClientServer());
+                fst.start();
             }
 
         });

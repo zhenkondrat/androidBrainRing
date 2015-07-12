@@ -16,7 +16,8 @@ public class Client {
 
     public Client(String n, String ip)
     {
-        name="None";
+        name=n;
+        this.ip = ip.replace("/","");
         zayavka=1;
     }
 

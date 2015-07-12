@@ -79,7 +79,7 @@ public class ServerThread implements Runnable {
                         PublicData.clients.add(new Client(line.substring(0,line.indexOf("@")),line.substring(line.indexOf("@") + 1, line.length())));
 
                         Log.v("client", line.substring(0, line.indexOf("@")));
-                        Log.v("client", line.substring(line.indexOf("@") + 1, line.length()));
+                        Log.v("client", line.substring(line.indexOf("@") + 2, line.length()));
                         //break;
                     } catch (Exception e) {
                         handler.post(new Runnable() {

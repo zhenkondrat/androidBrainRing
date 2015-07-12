@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.Data.UsualRound;
 import com.example.zhenkondrat.brainringapp.R;
 
@@ -41,22 +43,14 @@ public class ServerQuestionActivity extends Activity {
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (v.getId() == R.id.btnStartTime) {
-                    textViewShowTime.setTextAppearance(getApplicationContext(),
+                  textViewShowTime.setTextAppearance(getApplicationContext(),
                             R.style.Base_TextAppearance_AppCompat_Inverse);
                     setTimer();
-//                    buttonStopTime.setVisibility(View.VISIBLE);
-//                    buttonStartTime.setVisibility(View.GONE);
-//                    edtTimerValue.setVisibility(View.GONE);
-//                    edtTimerValue.setText("");
                     startTimer();
 
-//                } else if (v.getId() == R.id.btnStopTime) {
-//                    countDownTimer.cancel();
-//                    buttonStartTime.setVisibility(View.VISIBLE);
-//                    buttonStopTime.setVisibility(View.GONE);
-//                    edtTimerValue.setVisibility(View.VISIBLE);
-//                }
+                ServerToClient.command = Command.you_green;
+                Thread cThread = new Thread(new ServerToClient());
+                cThread.start();
             }
         };
 
