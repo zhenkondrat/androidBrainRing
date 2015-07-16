@@ -1,11 +1,13 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Data.Client;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
@@ -26,8 +28,9 @@ import java.util.Enumeration;
 public class ClientServer implements Runnable {
     // DEFAULT IP
     public static String SERVERIP = "192.168.231.101";
-    public static TeamInGameActivity context;
+    public static Activity context;
     public String line = null;
+    private boolean isEnabled = true;
 
     // DESIGNATE A PORT
     public static final int SERVERPORT = 4445;
@@ -35,6 +38,19 @@ public class ClientServer implements Runnable {
     private Handler handler = new Handler();
 
     private ServerSocket serverSocket;
+
+    public void Closed(){
+//        ClientToServer.command = Command.exit;
+//        ClientToServer.data= ClientPublicData.clientIP;
+//        Thread cThread = new Thread(new ClientToServer());
+//        cThread.start();
+        isEnabled=false;
+        try {
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
 
     public void run() {
 
@@ -49,7 +65,7 @@ public class ClientServer implements Runnable {
 
                 Log.v("Listening on IP1: ", SERVERIP);
                 serverSocket = new ServerSocket(4445);
-                while (true) {
+                while (isEnabled) {
                     // LISTEN FOR INCOMING CLIENTS
                     final Socket client = serverSocket.accept();
                     line = null;
@@ -77,34 +93,53 @@ public class ClientServer implements Runnable {
                             break;
                         }
                         Intent intent = null;
-                        if(line!=null)
+                        if(line!=null){
+                            String word="";
+                            if(line.indexOf("#")>0) {
+                                word = line;
+                                line = line.substring(0, line.indexOf("#"));
+                            }
+
                             switch (line)
                             {
                                 case "red":
                                     break;
-                                case "you_blue":
-                                    intent = new Intent( this.context, ClientVaBankActivity.class);
-//                                    ClientPublicData.selectServer = String.valueOf(view.getTag());
+                                case "start_vabank_round":
+                                    intent = new Intent( ((TeamInGameActivity)this.context), ClientVaBankActivity.class);
                                     Log.v("aaaaaa", "aaaaaaaa");
-//                                    //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
                                     context.startActivity(intent);
                                     break;
-                                case "you_green":
-                                    intent = new Intent( this.context, ClientDefRoundActivity.class);
-//                                    ClientPublicData.selectServer = String.valueOf(view.getTag());
+                                case "start_def_round":
+                                    intent = new Intent( ((TeamInGameActivity)this.context), ClientDefRoundActivity.class);
                                     Log.v("aaaaaa", "aaaaaaaa");
-//                                    //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
                                     context.startActivity(intent);
                                     break;
-                                case "remoney":
+                                case "start_def_time":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    ((ClientDefRoundActivity)this.context).setTimer(Integer.parseInt(word));
+                                    ((ClientDefRoundActivity)this.context).startTimer();
                                     break;
-                                case "say":
+                                case "delete_client":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    Toast.makeText( ((TeamInGameActivity)this.context), word+". Вашая заявка отклонена", Toast.LENGTH_LONG).show();
+                                    break;
+                                case "accept_client":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    Toast.makeText( ((TeamInGameActivity)this.context), word+". Вашая заявка принята", Toast.LENGTH_LONG).show();
+                                    break;
+                                case "wait_client":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    Toast.makeText( ((TeamInGameActivity)this.context), word+". Вашая заявка подана", Toast.LENGTH_LONG).show();
+                                    break;
+                                case "say_team":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    Toast.makeText( this.context, word+" say", Toast.LENGTH_LONG).show();
                                     Log.d("ClientServerActivity", "Say");
                                     break;
                                 case "start":
                                     break;
                             }
-
+                        }
                          //break;
                     } catch (Exception e) {
                         handler.post(new Runnable() {

@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
  */
 public class ServerToClient implements Runnable  {
     public static Command command = Command.none;
+    public static String data = "";
 
     private void callClient()
     {
@@ -51,7 +52,7 @@ public class ServerToClient implements Runnable  {
     {
         for(int i = 0; i<PublicData.clients.size();i++)
         {
-            if(PublicData.clients.get(i).getZayavka()!=1) break;
+            if(PublicData.clients.get(i).getZayavka()!=3) break;
 
             InetAddress serverAddr = null;
             try {
@@ -79,6 +80,63 @@ public class ServerToClient implements Runnable  {
         }
     }
 
+    private void sendData()
+    {
+        for(int i = 0; i<PublicData.clients.size();i++)
+        {
+            if(PublicData.clients.get(i).getZayavka()!=2) break;
+
+            InetAddress serverAddr = null;
+            try {
+                //serverAddr = InetAddress.getByName("192.168.231.100");
+                serverAddr = InetAddress.getByName( PublicData.clients.get(i).getIp());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(serverAddr, 4445), 100);
+                PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket
+                        .getOutputStream())), true);
+                // WHERE YOU ISSUE THE COMMANDS
+                out.println(command.toString()+"#"+data);
+                socket.close();
+
+                Log.d(PublicData.clients.get(i).getIp(), data+"-send-"+command.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                PublicData.clients.get(i).setZayavka(2);
+                Log.d( PublicData.clients.get(i).getIp(),  "-disconnect");
+            }
+        }
+    }
+
+
+    private void zayavkaClient()
+    {
+                InetAddress serverAddr = null;
+                try {
+                    //serverAddr = InetAddress.getByName("192.168.231.100");
+                    serverAddr = InetAddress.getByName(data);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Socket socket = new Socket();
+                    socket.connect(new InetSocketAddress(serverAddr, 4445), 100);
+                    PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket
+                            .getOutputStream())), true);
+                    // WHERE YOU ISSUE THE COMMANDS
+                    out.println(command.toString()+"#"+PublicData.leader.getGameName());
+                    socket.close();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+    }
 
     @Override
     public void run() {
@@ -86,12 +144,28 @@ public class ServerToClient implements Runnable  {
             case call_clients:
                 callClient();
                 break;
-            case you_green:
+            case start_def_round:
                 startRound();
                 break;
-            case you_blue:
+            case start_vabank_round:
                 startRound();
                 break;
+            case say_team:
+                startRound();
+                break;
+            case delete_client:
+                zayavkaClient();
+                break;
+            case wait_client:
+                zayavkaClient();
+                break;
+            case accept_cleint:
+                zayavkaClient();
+                break;
+            case start_def_time:
+                sendData();
+                break;
+
         }
         try {
 

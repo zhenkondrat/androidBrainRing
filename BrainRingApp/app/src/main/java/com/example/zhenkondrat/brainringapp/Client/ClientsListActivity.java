@@ -1,10 +1,11 @@
-package com.example.zhenkondrat.brainringapp.Server;
+package com.example.zhenkondrat.brainringapp.Client;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,25 +16,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientServer;
-import com.example.zhenkondrat.brainringapp.Client.SearchServers;
-import com.example.zhenkondrat.brainringapp.Client.SingInGameActivity;
-import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.R;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-public class ClientsListActivity extends ActionBarActivity {
+public class ClientsListActivity extends Activity {
     int i;//index from cycle
     boolean observer = true;
 
@@ -41,7 +29,6 @@ public class ClientsListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients_list);
-        getSupportActionBar().setTitle("Список клиентов");
         new Thread(myThread).start();
     }
 
@@ -88,10 +75,11 @@ public class ClientsListActivity extends ActionBarActivity {
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        else
 //            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        PublicData.UpdateClientsInList();
-        ServerToClient.command = Command.call_clients;
-        Thread cThread = new Thread(new ServerToClient());
-        cThread.start();
+
+//        PublicData.UpdateClientsInList();
+//        ServerToClient.command = Command.call_clients;
+//        Thread cThread = new Thread(new ServerToClient());
+//        cThread.start();
         UpdateList();
         Log.v("---", "show list");
     }

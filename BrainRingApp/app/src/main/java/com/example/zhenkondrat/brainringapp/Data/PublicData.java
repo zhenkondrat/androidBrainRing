@@ -12,6 +12,7 @@ public class PublicData {
     public static ArrayList<Member> members = new ArrayList<Member>();
     public static Leader leader = new Leader("None");
     public static ArrayList<Client> clients = new ArrayList<Client>();
+    public static ArrayList<Integer> currentScores = new ArrayList<Integer>();
     public static int currentRound = 0;
     public static int currentQuestion = 0;
 

@@ -39,14 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/imageView3"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/logo" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="97dp"
+            android:layout_height="147dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp" >
 
@@ -58,6 +58,16 @@
                 android:fontFamily="Segoe UI"
                 android:textSize="16dp"
                 android:layout_marginTop="20dp" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Вийти из игры"
+                android:id="@+id/button27"
+                android:fontFamily="Segoe UI"
+                android:textSize="16dp"
+                android:layout_marginTop="20dp"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.example.zhenkondrat.brainringapp.Data.Client;
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
+import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Server.ServerThread;
 
@@ -32,6 +35,18 @@ public class ClientThread implements Runnable {
     public static boolean connected = false;
 
     private Handler handler = new Handler();
+
+    public void Closed(){
+//        ClientToServer.command = Command.exit;
+//        ClientToServer.data= ClientPublicData.clientIP;
+//        Thread cThread = new Thread(new ClientToServer());
+//        cThread.start();
+        try {
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
 
     public void run() {
         try {

@@ -1,20 +1,26 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.Data.UsualRound;
+import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class ServerQuestionActivity extends Activity {
@@ -48,7 +54,8 @@ public class ServerQuestionActivity extends Activity {
                     setTimer();
                     startTimer();
 
-                ServerToClient.command = Command.you_green;
+                ServerToClient.command = Command.start_def_time;
+                ServerToClient.data = String.valueOf( ((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getTimeQuestion());
                 Thread cThread = new Thread(new ServerToClient());
                 cThread.start();
             }
@@ -59,7 +66,46 @@ public class ServerQuestionActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextQuestion();
+                //dialog
+                AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                        ServerQuestionActivity.this);
+
+                // Встановлення заголовка
+                alertDialog2.setTitle("Подверждение");
+
+                // Встановлення повідомлення
+                try {
+
+                    alertDialog2.setMessage("Вы увереный что хотите пропустить?");
+
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                // Встановлення іконки
+                //alertDialog2.setIcon(R.drawable.delete);
+
+                // Встановлення події на позитивну відповідь
+                alertDialog2.setPositiveButton("Да",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //OnClickYes
+                                nextQuestion();
+                            }
+                        });
+                // Встановлення події при негативній умові
+                alertDialog2.setNegativeButton("Нет",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                //Показуємо діалог
+                alertDialog2.show();
+
+                //end dialog
+
             }
         });
 
@@ -67,8 +113,53 @@ public class ServerQuestionActivity extends Activity {
 
     public void nextQuestion()
     {
-        PublicData.currentQuestion++;
-        num.setText(String.valueOf(PublicData.currentQuestion));
+        if(((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getCountQuestion()>PublicData.currentQuestion) {
+            PublicData.currentQuestion++;
+            num.setText(String.valueOf(PublicData.currentQuestion));
+        }
+        else
+        {
+            //dialog
+            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    ServerQuestionActivity.this);
+
+            // Встановлення заголовка
+            alertDialog2.setTitle("Подверждение");
+
+            // Встановлення повідомлення
+            try {
+
+                alertDialog2.setMessage("Вы хотите добавить вопрос?");
+
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            // Встановлення іконки
+            //alertDialog2.setIcon(R.drawable.delete);
+
+            // Встановлення події на позитивну відповідь
+            alertDialog2.setPositiveButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //OnClickYes
+                            ((UsualRound)PublicData.rounds.get(PublicData.currentRound)).setCountQuestion(((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getCountQuestion()+1);
+                            nextQuestion();
+                        }
+                    });
+            // Встановлення події при негативній умові
+            alertDialog2.setNegativeButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            //Показуємо діалог
+            alertDialog2.show();
+
+            //end dialog
+        }
     }
 
     private void setTimer() {
@@ -92,8 +183,8 @@ public class ServerQuestionActivity extends Activity {
                 long seconds = leftTimeInMilliseconds / 1000;
 
                 if (leftTimeInMilliseconds < timeBlinkInMilliseconds) {
-                    textViewShowTime.setTextAppearance(getApplicationContext(),
-                            R.style.Base_TextAppearance_AppCompat_Display4);
+//                   timeBlinkInMilliseconds textViewShowTime.setTextAppearance(getApplicationContext(),
+//                            R.style.Base_TextAppearance_AppCompat_Display4);
                     // change the style of the textview .. giving a red
                     // alert style
 
@@ -116,7 +207,7 @@ public class ServerQuestionActivity extends Activity {
             @Override
             public void onFinish() {
                 // this function will be called when the timecount is finished
-                textViewShowTime.setText("Time up!");
+                textViewShowTime.setText("Время истекло!");
                 textViewShowTime.setVisibility(View.VISIBLE);
                 //buttonStartTime.setVisibility(View.VISIBLE);
                 //buttonStopTime.setVisibility(View.GONE);

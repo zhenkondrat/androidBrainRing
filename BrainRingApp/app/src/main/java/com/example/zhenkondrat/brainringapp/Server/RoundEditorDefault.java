@@ -20,7 +20,7 @@ public class RoundEditorDefault extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_editor_default);
-
+        getSupportActionBar().setTitle("Обычный раунд");
         Button btn = (Button) findViewById(R.id.button18);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -19,6 +19,17 @@ public class GuidActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guid);
+        getSupportActionBar().setTitle("Настройки");
+
+        EditText ed = (EditText) findViewById(R.id.editText13);
+        ed.setText(PublicData.leader.getGameName());
+
+        CheckBox ch = (CheckBox) findViewById(R.id.checkBox10);
+        ch.setChecked(PublicData.leader.isLight());
+
+        ch = (CheckBox) findViewById(R.id.checkBox11);
+        ch.setChecked(PublicData.leader.isBlock());
+
 
         Button btn = (Button) findViewById(R.id.button19);
         btn.setOnClickListener(new View.OnClickListener() {

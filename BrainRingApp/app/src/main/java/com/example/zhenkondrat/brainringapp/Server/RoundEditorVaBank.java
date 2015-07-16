@@ -20,7 +20,7 @@ public class RoundEditorVaBank extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_editor_va_bank);
-
+        getSupportActionBar().setTitle("Ва-банк раунд");
 
         Button btn = (Button) findViewById(R.id.button17);
         btn.setOnClickListener(new View.OnClickListener() {

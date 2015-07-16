@@ -1,18 +1,22 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
 import com.example.zhenkondrat.brainringapp.R;
 
-public class ClientVaBankActivity extends ActionBarActivity {
+public class ClientVaBankActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +46,23 @@ public class ClientVaBankActivity extends ActionBarActivity {
         //alertDialog2.setIcon(R.drawable.delete);
 
         // Встановлення події на позитивну відповідь
-        alertDialog2.setPositiveButton("YES",
+        alertDialog2.setPositiveButton("Да",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //OnClickYes
-                        ball.getText().toString();
+                        try {
+                            int x = Integer.parseInt(ball.getText().toString());
+                            ClientToServer.data = String.valueOf(x);
+                            ClientToServer.command = Command.set_ball;
+                            Thread cThread = new Thread(new ClientToServer());
+                            cThread.start();
+                        } catch (Exception ex) {
+                            Log.v("","is not digit");
+                        }
                     }
                 });
         // Встановлення події при негативній умові
-        alertDialog2.setNegativeButton("NO",
+        alertDialog2.setNegativeButton("Нет",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

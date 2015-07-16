@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +28,9 @@ import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
 import com.example.zhenkondrat.brainringapp.Client.SearchServers;
 import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.R;
 
 import java.net.InetAddress;
@@ -36,7 +39,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class MainGameActivity extends ActionBarActivity {
-
+    final int MENU_DEL = 1;
+    int delId=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,7 @@ public class MainGameActivity extends ActionBarActivity {
         fst.start();
 
         ActionBar supportActionBar = getSupportActionBar();
+        getSupportActionBar().setTitle("");
 //       supportActionBar.show();
         supportActionBar.setLogo(R.drawable.logo);
 //        supportActionBar.hide();
@@ -334,18 +339,18 @@ public class MainGameActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //display sunshy all time
-//        if (PublicData.leader.isLight())
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        else
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        display sunshy all time
+        if (PublicData.leader.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         LinearLayout linLayout = (LinearLayout) findViewById(R.id.linLayout);
         linLayout.removeAllViews();
         if (PublicData.rounds.size()==0)
         {
             TextView tw = new TextView(getBaseContext());
-            tw.setText("\t Server not find");
+            tw.setText("\t Нету созданых раундов");
             linLayout.addView(tw);
         }
         else {
@@ -358,6 +363,7 @@ public class MainGameActivity extends ActionBarActivity {
                     TextView tv1 = (TextView) item.findViewById(R.id.tvID);
                     TextView tv2 = (TextView) item.findViewById(R.id.tvType);
                     item.setTag(i);
+                    registerForContextMenu(item);
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -365,15 +371,15 @@ public class MainGameActivity extends ActionBarActivity {
                             if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("UsualRound")>=0) {
                                 intent = new Intent(MainGameActivity.this, ServerQuestionActivity.class);
                                 intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
+
+                                ServerToClient.command = Command.start_def_round;
+                                Thread cThread = new Thread(new ServerToClient());
+                                cThread.start();
                             }
                             if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("VaBank")>=0) {
                                 intent = new Intent(MainGameActivity.this, ServerVaBankActivity.class);
                                 intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
                             }
-
-                            //if(PublicData.rounds.get(i).getClass().toString().indexOf("VaBank")>=0)
-                            //ClientPublicData.selectServer = String.valueOf(view.getTag());
-                            //Log.v("push", String.valueOf(view.getTag()));
 
                             startActivity(intent);
                         }
@@ -400,6 +406,25 @@ public class MainGameActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_game, menu);
+        return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, MENU_DEL, 0, "Удалить раунд");
+        delId = Integer.parseInt(v.getTag().toString());
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        switch (item.getItemId()) {
+            case MENU_DEL:
+                PublicData.rounds.remove(delId);
+                onResume();
+                break;
+        }
         return true;
     }
 

@@ -1,7 +1,11 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.R;
@@ -23,14 +28,15 @@ import java.util.ArrayList;
 
 
 public class SingInGameActivity extends Activity {
-    private Activity act;
+    private Context act;
+    private boolean status=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_in_game);
 
-        act = this;
+        act = getBaseContext();
 
         Button btn;
         //button create game
@@ -49,13 +55,58 @@ public class SingInGameActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //SearchServers ss = new SearchServers(getBaseContext());
-                Thread cThread = new Thread(new SearchServers(act));
-                cThread.start();
-                //ss.scan();
+                if (isNetworkOnline(getBaseContext())) {
+                    Thread cThread = new Thread(new SearchServers(act));
+                    cThread.start();
+                }
+                else
+                    Toast.makeText(getBaseContext(), "Нет подключения Wi-Fi.Сначала подключитесь к сети!", Toast.LENGTH_LONG).show();
+
             }
         });
+
+        new Thread(myThread).start();
     }
+
+
+    boolean isNetworkOnline (Context context) {
+
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+            status = true;
+        } else {
+            status = false;
+        }
+        return status;
+
+    }
+
+    private Runnable myThread = new Runnable() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            while (SearchServers.enabled) {
+                try {
+                    myHandle.sendMessage(myHandle.obtainMessage());
+                    Thread.sleep(1000);
+                } catch (Throwable t) {
+                }
+            }
+            try {
+                this.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+
+        Handler myHandle = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                UpdateList();
+            }
+        };
+    };
 
     public void UpdateList()
     {
@@ -64,7 +115,7 @@ public class SingInGameActivity extends Activity {
         if (ClientPublicData.servers.size()==0)
         {
             TextView tw = new TextView(getBaseContext());
-            tw.setText("\t Server not find");
+            tw.setText("\t Нет игр");
             linLayout.addView(tw);
         }
         else {
@@ -72,11 +123,11 @@ public class SingInGameActivity extends Activity {
             LayoutInflater ltInflater = getLayoutInflater();
 
             for (int i = 0; i < ClientPublicData.servers.size(); i++) {
-                if (ClientPublicData.servers.get(i)!="") {
+                if (ClientPublicData.servers.get(i).getIp()!="") {
                     View item = ltInflater.inflate(R.layout.item, linLayout, false);
                     //TextView tv1 = (TextView) item.findViewById(R.id.tvName);
                     TextView tv2 = (TextView) item.findViewById(R.id.tvTime);
-                    item.setTag(ClientPublicData.servers.get(i));
+                    item.setTag(ClientPublicData.servers.get(i).getIp());
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -89,7 +140,7 @@ public class SingInGameActivity extends Activity {
                     });
 
                     //tv1.setText("Name Of Game");
-                    tv2.setText("IP: " + ClientPublicData.servers.get(i));
+                    tv2.setText( ClientPublicData.servers.get(i).getName());
 
                     item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     //item.setBackgroundColor(colors[0]);
@@ -109,8 +160,8 @@ public class SingInGameActivity extends Activity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         UpdateList();
-        Log.v("---", "show list");
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

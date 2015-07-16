@@ -2,6 +2,8 @@ package com.example.zhenkondrat.brainringapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Client.ClientThread;
 import com.example.zhenkondrat.brainringapp.Client.SearchServers;
@@ -25,11 +28,16 @@ import java.util.Enumeration;
 
 
 public class TestActivity extends ActionBarActivity {
-
+    boolean status = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+
+        if (isNetworkOnline (getBaseContext()))
+        Toast.makeText(getBaseContext(),"Y" , Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(getBaseContext(),"N" , Toast.LENGTH_LONG).show();
 
         Button btn;
         //button create game
@@ -85,6 +93,17 @@ public class TestActivity extends ActionBarActivity {
         });
     }
 
+    boolean isNetworkOnline (Context context) {
+
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+           status = true;
+        } else {
+            status = false;
+        }
+        return status;
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

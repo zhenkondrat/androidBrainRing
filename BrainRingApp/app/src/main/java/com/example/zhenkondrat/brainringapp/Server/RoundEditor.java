@@ -16,7 +16,7 @@ public class RoundEditor extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_round_editor);
-
+        getSupportActionBar().setTitle("Вибирите тип раунда");
         Button btn;
         //button usual round
         btn = (Button) findViewById(R.id.button15);

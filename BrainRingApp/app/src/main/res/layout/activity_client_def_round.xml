@@ -12,15 +12,30 @@
         android:layout_height="fill_parent"
         android:gravity="center">
 
-        <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        <TextView
+            android:text="Осталось времени:"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/time" />
+            android:id="@+id/textView20" />
+
+        <TextView android:text="00:00" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:textSize="30dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ответить"
-            android:id="@+id/button28" />
+            android:id="@+id/button28"
+            android:enabled="false" />
+
+        <TextView
+            android:text="--"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView21" />
+
     </LinearLayout>
 
 </RelativeLayout>

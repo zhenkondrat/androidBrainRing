@@ -1,17 +1,25 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.zhenkondrat.brainringapp.Client.ClientDefRoundActivity;
+import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
 import com.example.zhenkondrat.brainringapp.Data.Client;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -64,7 +72,8 @@ public class ServerThread implements Runnable {
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                        while ((line = in.readLine()) != null) {
+                        while ((line = in.readLine()) != null)
+                        {
                             Log.d("ServerActivity", line);
 
                             handler.post(new Runnable() {
@@ -76,10 +85,56 @@ public class ServerThread implements Runnable {
                             break;
                         }
 
-                        PublicData.clients.add(new Client(line.substring(0,line.indexOf("@")),line.substring(line.indexOf("@") + 1, line.length())));
+                        if(line!=null) {
+                            String word="";
+                            if(line.indexOf("#")>0) {
+                                word = line;
+                                line = line.substring(0, line.indexOf("#"));
+                            }
+                            switch (line) {
+                                case "connect":
+                                    PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client
+                                            .getOutputStream())), true);
+                                    out.println(PublicData.leader.getGameName());
+                                    break;
+                                case "say":
+                                    Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
+                                    for(int i =0; i<PublicData.clients.size(); i++)
+                                    {
+                                        if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(1,client.getLocalAddress().toString().length())))
+                                        {
+                                            ServerToClient.command = Command.say_team;
+                                            ServerToClient.data = PublicData.clients.get(i).getName();
+                                            Thread cThread = new Thread(new ServerToClient());
+                                            cThread.start();
+                                        }
+                                    }
+                                    break;
+                                case "set_ball":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    int i;
+                                    for (i = 0; i < PublicData.clients.size(); i++) {
+                                        if(client.getLocalAddress().toString().endsWith(PublicData.clients.get(i).getIp()))
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    PublicData.currentScores.set(i,Integer.parseInt(word));
+                                    Log.d("server thread", "set " + word);
+                                    break;
+                                case "exit":
+                                    word = word.substring(word.indexOf("#")+1 , word.length());
+                                    removeClient(word);
+                                    Log.d("server thread", "set " + word);
+                                    break;
+                                default:
+                                    if(!inTheClient(line.substring(line.indexOf("@") + 1, line.length())))
+                                    PublicData.clients.add(new Client(line.substring(0, line.indexOf("@")), line.substring(line.indexOf("@") + 1, line.length())));
 
-                        Log.v("client", line.substring(0, line.indexOf("@")));
-                        Log.v("client", line.substring(line.indexOf("@") + 2, line.length()));
+                                    Log.v("client", line.substring(0, line.indexOf("@")));
+                                    Log.v("client", line.substring(line.indexOf("@") + 2, line.length()));
+                            }
+                        }
                         //break;
                     } catch (Exception e) {
                         handler.post(new Runnable() {
@@ -110,6 +165,24 @@ public class ServerThread implements Runnable {
         }
     }
 
+    private boolean inTheClient(String ip)
+    {
+        for(int i=0; i<PublicData.clients.size();i++)
+        {
+            if(PublicData.clients.get(i).getIp().equals(ip))
+                return true;
+        }
+        return false;
+    }
+
+    private void removeClient(String ip)
+    {
+        for(int i=0; i<PublicData.clients.size();i++)
+        {
+            if(PublicData.clients.get(i).getIp().equals(ip))
+                PublicData.clients.remove(i);
+        }
+    }
     // GETS THE IP ADDRESS OF YOUR PHONE'S NETWORK
     private String getLocalIpAddress() {
         try {
