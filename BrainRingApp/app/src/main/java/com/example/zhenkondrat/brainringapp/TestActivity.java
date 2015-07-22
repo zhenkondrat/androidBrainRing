@@ -1,12 +1,8 @@
 package com.example.zhenkondrat.brainringapp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +14,8 @@ import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Client.ClientThread;
 import com.example.zhenkondrat.brainringapp.Client.SearchServers;
-import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Statist.Statistic;
 import com.example.zhenkondrat.brainringapp.Server.ServerThread;
 
 import java.net.InetAddress;
@@ -29,6 +26,7 @@ import java.util.Enumeration;
 
 public class TestActivity extends ActionBarActivity {
     boolean status = false;
+    Statistic st;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +56,11 @@ public class TestActivity extends ActionBarActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                st = new Statistic(PublicData.rounds, PublicData.clients);
+                st.clearScore();
+                st.setScore(0,0,5);
+                st.setContext(getBaseContext());
+                st.saveToFileObj("file", st);
 
             }
         });
@@ -88,7 +91,9 @@ public class TestActivity extends ActionBarActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                st=new Statistic();
+                st.setContext(getBaseContext());
+                st.loadFromFile("file");
             }
         });
     }

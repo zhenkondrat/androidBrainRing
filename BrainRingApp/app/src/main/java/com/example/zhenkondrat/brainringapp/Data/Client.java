@@ -1,17 +1,21 @@
 package com.example.zhenkondrat.brainringapp.Data;
 
+import java.io.Serializable;
+
 /**
  * Created by zhEnkondrat on 03.07.2015.
  */
-public class Client {
+public class Client implements Serializable {
     private String name;
     private String ip;
     private int zayavka;
+    private int priorzayavka;
 
     public Client()
     {
         name="None";
         zayavka=1;
+        priorzayavka=2;
     }
 
     public Client(String n, String ip)
@@ -19,6 +23,7 @@ public class Client {
         name=n;
         this.ip = ip.replace("/","");
         zayavka=1;
+        priorzayavka=2;
     }
 
     public String getName() {
@@ -43,5 +48,13 @@ public class Client {
 
     public void setZayavka(int zayavka) {
         this.zayavka = zayavka;
+    }
+
+    public int getPriorzayavka() {
+        return priorzayavka;
+    }
+
+    public void setPriorzayavka(int priorzayavka) {
+        this.priorzayavka = priorzayavka;
     }
 }

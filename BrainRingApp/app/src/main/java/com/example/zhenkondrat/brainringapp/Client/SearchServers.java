@@ -62,18 +62,15 @@ public class SearchServers implements Runnable  {
         enabled=true;
         ip = ip.substring(0, ip.lastIndexOf('.')+1);
         for(int i=1;i<255;i++)
-        //for(int i=92;i<105;i++)
         {
             InetAddress serverAddr = null;
             try {
-                //Log.d("connect", ip.concat(String.valueOf(i)));
                 serverAddr = InetAddress.getByName(ip.concat(String.valueOf(i)));
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
 
             try {
-//                Socket socket = new Socket(serverAddr, ServerThread.SERVERPORT);
                 Socket socket = new Socket();
                 socket.connect(new InetSocketAddress(serverAddr, ServerThread.SERVERPORT),100);
 
@@ -90,9 +87,6 @@ public class SearchServers implements Runnable  {
                 }
                 socket.close();
                 ClientPublicData.servers.add(new Servers(line, ip.concat(String.valueOf(i))));//ip.concat(String.valueOf(i)));
-                //((SingInGameActivity)activiy).finish();
-                //UpdateList();
-                //Toast.makeText(activiy,ip.concat(String.valueOf(i)), Toast.LENGTH_LONG).show();
                 Log.d("connect", ip.concat(String.valueOf(i)));
             } catch (IOException e) {
                 e.printStackTrace();

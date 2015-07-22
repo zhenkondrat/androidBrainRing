@@ -58,14 +58,13 @@ public class SingInGameActivity extends Activity {
                 if (isNetworkOnline(getBaseContext())) {
                     Thread cThread = new Thread(new SearchServers(act));
                     cThread.start();
+                    new Thread(myThread).start();
                 }
                 else
                     Toast.makeText(getBaseContext(), "Нет подключения Wi-Fi.Сначала подключитесь к сети!", Toast.LENGTH_LONG).show();
 
             }
         });
-
-        new Thread(myThread).start();
     }
 
 
@@ -103,6 +102,7 @@ public class SingInGameActivity extends Activity {
             @Override
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
+                //onResume();
                 UpdateList();
             }
         };
@@ -125,7 +125,6 @@ public class SingInGameActivity extends Activity {
             for (int i = 0; i < ClientPublicData.servers.size(); i++) {
                 if (ClientPublicData.servers.get(i).getIp()!="") {
                     View item = ltInflater.inflate(R.layout.item, linLayout, false);
-                    //TextView tv1 = (TextView) item.findViewById(R.id.tvName);
                     TextView tv2 = (TextView) item.findViewById(R.id.tvTime);
                     item.setTag(ClientPublicData.servers.get(i).getIp());
                     item.setOnClickListener(new View.OnClickListener() {
@@ -139,11 +138,9 @@ public class SingInGameActivity extends Activity {
                         }
                     });
 
-                    //tv1.setText("Name Of Game");
                     tv2.setText( ClientPublicData.servers.get(i).getName());
 
                     item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    //item.setBackgroundColor(colors[0]);
                     linLayout.addView(item);
                 }
             }

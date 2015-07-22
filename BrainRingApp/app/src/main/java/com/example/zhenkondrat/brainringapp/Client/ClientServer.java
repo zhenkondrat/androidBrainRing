@@ -19,6 +19,8 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.example.zhenkondrat.brainringapp.Data.Command;
+import com.example.zhenkondrat.brainringapp.Server.ServerThread;
+
 import java.net.SocketException;
 import java.util.Enumeration;
 
@@ -59,7 +61,6 @@ public class ClientServer implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("Listening on IP: ", SERVERIP);
                     }
                 });
 
@@ -72,10 +73,6 @@ public class ClientServer implements Runnable {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.v("CLConnected.", "true");
-                            Log.v("CLclientIP", client.getInetAddress().toString());
-                            Log.v("CLserverIP", serverSocket.getInetAddress().toString());
-                            Log.v("CLserverIP2", SERVERIP);
                         }
                     });
                     try {
@@ -115,9 +112,24 @@ public class ClientServer implements Runnable {
                                     context.startActivity(intent);
                                     break;
                                 case "start_def_time":
+                                    Log.v("start_def_time: ", "---");
                                     word = word.substring(word.indexOf("#")+1 , word.length());
                                     ((ClientDefRoundActivity)this.context).setTimer(Integer.parseInt(word));
-                                    ((ClientDefRoundActivity)this.context).startTimer();
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ((ClientDefRoundActivity)ClientServer.context).startTimer();
+                                            Toast.makeText( ((ClientDefRoundActivity)ClientServer.context), " start timer", Toast.LENGTH_LONG).show();
+                                            try {
+                                                this.finalize();
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                    this.isEnabled=false;
+                                    //Toast.makeText( ((ClientDefRoundActivity)this.context), word+" start timer", Toast.LENGTH_LONG).show();
+                                    line=null;
                                     break;
                                 case "delete_client":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
@@ -133,7 +145,7 @@ public class ClientServer implements Runnable {
                                     break;
                                 case "say_team":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
-                                    Toast.makeText( this.context, word+" say", Toast.LENGTH_LONG).show();
+                                    Toast.makeText( ((ClientDefRoundActivity)this.context), word+" say", Toast.LENGTH_LONG).show();
                                     Log.d("ClientServerActivity", "Say");
                                     break;
                                 case "start":
@@ -145,7 +157,7 @@ public class ClientServer implements Runnable {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Log.v("","Oops. Connection interrupted. Please reconnect your phones.");
+                                Log.v("","ClientServer. Connection interrupted. Please reconnect your phones.");
                             }
                         });
                         e.printStackTrace();

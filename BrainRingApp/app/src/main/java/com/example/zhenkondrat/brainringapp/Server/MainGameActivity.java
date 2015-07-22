@@ -1,7 +1,10 @@
 package com.example.zhenkondrat.brainringapp.Server;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -14,23 +17,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
 import com.example.zhenkondrat.brainringapp.Client.SearchServers;
-import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
-import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
+import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
+import com.example.zhenkondrat.brainringapp.Statist.Statistic;
 import com.example.zhenkondrat.brainringapp.R;
 
 import java.net.InetAddress;
@@ -41,10 +47,13 @@ import java.util.Enumeration;
 public class MainGameActivity extends ActionBarActivity {
     final int MENU_DEL = 1;
     int delId=0;
+    Statistic st=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
+
         ServerThread.SERVERIP = getLocalIpAddress();
         WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -53,8 +62,15 @@ public class MainGameActivity extends ActionBarActivity {
         ServerThread.SERVERIP = SearchServers.toIP(myIp);
         Log.v("MainGA: ", ServerThread.SERVERIP);
         //start server socket
-        Thread fst = new Thread(new ServerThread());
-        fst.start();
+
+        if (PublicData.serverThread!=null)
+        {
+            PublicData.serverThread.Closed();
+            PublicData.sThread.stop();
+        }
+        PublicData.serverThread = new ServerThread();
+        PublicData.sThread = new Thread(PublicData.serverThread);
+        PublicData.sThread.start();
 
         ActionBar supportActionBar = getSupportActionBar();
         getSupportActionBar().setTitle("");
@@ -337,9 +353,63 @@ public class MainGameActivity extends ActionBarActivity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            //onBackPressed();
+            //dialog
+            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    MainGameActivity.this);
+
+            // Встановлення заголовка
+            alertDialog2.setTitle("Exit");
+
+            // Встановлення повідомлення
+            try {
+
+                alertDialog2.setMessage("You want to exit?");
+
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            // Встановлення іконки
+            //alertDialog2.setIcon(R.drawable.delete);
+
+            // Встановлення події на позитивну відповідь
+            alertDialog2.setPositiveButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //OnClickYes
+                            onBackPressed();
+                        }
+                    });
+            // Встановлення події при негативній умові
+            alertDialog2.setNegativeButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            //Показуємо діалог
+            alertDialog2.show();
+
+            //end dialog
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+            finish();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-//        display sunshy all time
+        //  display sunshy all time
         if (PublicData.leader.isLight())
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         else
@@ -392,6 +462,9 @@ public class MainGameActivity extends ActionBarActivity {
 
                     if(PublicData.rounds.get(i).getClass().toString().indexOf("VaBank")>=0)
                         tv2.setText("Va Bank");
+
+                    if(PublicData.rounds.get(PublicData.currentRound).isFin())
+                        item.setBackgroundColor(Color.RED);
 
                     item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     //item.setBackgroundColor(colors[0]);
@@ -447,6 +520,19 @@ public class MainGameActivity extends ActionBarActivity {
                 startActivity(inten);
                 Log.v("---","---");
                 break;
+            case R.id.start:
+                st = new Statistic(PublicData.rounds, PublicData.clients);
+                st.clearScore();
+                //st.setScore(0,0,5);
+                st.setContext(getBaseContext());
+                //st.saveToFileObj("file", st);
+                Toast.makeText(getBaseContext(), "Новая игра начата", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.finish:
+                st.saveToFileObj("file", st);
+                break;
+
+
         }
 
         return super.onOptionsItemSelected(item);

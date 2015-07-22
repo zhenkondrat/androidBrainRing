@@ -43,6 +43,15 @@ public class ServerThread implements Runnable {
 
     private ServerSocket serverSocket;
 
+    public void Closed(){
+        try {
+            serverSocket.close();
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
     public void run() {
 
         try {
@@ -50,7 +59,6 @@ public class ServerThread implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("Listening on IP: ", SERVERIP);
                     }
                 });
 
@@ -63,10 +71,7 @@ public class ServerThread implements Runnable {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.v("Connected.", "true");
-                            Log.v("clientIP", client.getInetAddress().toString());
-                            Log.v("serverIP", serverSocket.getInetAddress().toString());
-                            Log.v("serverIP2", SERVERIP);
+
                         }
                     });
                     try {
@@ -98,15 +103,16 @@ public class ServerThread implements Runnable {
                                     out.println(PublicData.leader.getGameName());
                                     break;
                                 case "say":
-                                    Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
+
                                     for(int i =0; i<PublicData.clients.size(); i++)
                                     {
-                                        if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(1,client.getLocalAddress().toString().length())))
+                                        if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(4,client.getLocalAddress().toString().length())))
                                         {
                                             ServerToClient.command = Command.say_team;
                                             ServerToClient.data = PublicData.clients.get(i).getName();
                                             Thread cThread = new Thread(new ServerToClient());
                                             cThread.start();
+                                            Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
                                         }
                                     }
                                     break;
@@ -140,7 +146,7 @@ public class ServerThread implements Runnable {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Log.v("","Oops. Connection interrupted. Please reconnect your phones.");
+                                Log.v("","ServerThread. Connection interrupted. Please reconnect your phones.");
                             }
                         });
                         e.printStackTrace();

@@ -22,7 +22,6 @@ public class ClientToServer implements Runnable  {
     {
          InetAddress serverAddr = null;
             try {
-                //serverAddr = InetAddress.getByName("192.168.231.100");
                 serverAddr = InetAddress.getByName(ClientPublicData.selectServer);
                 Log.v("ClienToserv", ClientPublicData.selectServer);
             } catch (UnknownHostException e) {
@@ -49,7 +48,6 @@ public class ClientToServer implements Runnable  {
     {
         InetAddress serverAddr = null;
         try {
-            //serverAddr = InetAddress.getByName("192.168.231.100");
             serverAddr = InetAddress.getByName(ClientPublicData.selectServer);
             Log.v("ClienToserv", ClientPublicData.selectServer);
         } catch (UnknownHostException e) {
@@ -76,7 +74,6 @@ public class ClientToServer implements Runnable  {
     {
         InetAddress serverAddr = null;
         try {
-            //serverAddr = InetAddress.getByName("192.168.231.100");
             serverAddr = InetAddress.getByName(ClientPublicData.selectServer);
             Log.v("ClienToserv", ClientPublicData.selectServer);
         } catch (UnknownHostException e) {

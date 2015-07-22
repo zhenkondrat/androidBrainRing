@@ -1,13 +1,16 @@
 package com.example.zhenkondrat.brainringapp.Client;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,6 +76,59 @@ public class TeamInGameActivity extends Activity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            //onBackPressed();
+            //dialog
+            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    TeamInGameActivity.this);
+
+            // Встановлення заголовка
+            alertDialog2.setTitle("Exit");
+
+            // Встановлення повідомлення
+            try {
+
+                alertDialog2.setMessage("You want to exit?");
+
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            // Встановлення іконки
+            //alertDialog2.setIcon(R.drawable.delete);
+
+            // Встановлення події на позитивну відповідь
+            alertDialog2.setPositiveButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //OnClickYes
+                            onBackPressed();
+                        }
+                    });
+            // Встановлення події при негативній умові
+            alertDialog2.setNegativeButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            //Показуємо діалог
+            alertDialog2.show();
+
+            //end dialog
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

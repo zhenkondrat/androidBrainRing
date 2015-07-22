@@ -1,9 +1,11 @@
 package com.example.zhenkondrat.brainringapp.Data;
 
+import java.io.Serializable;
+
 /**
  * Created by zhEnkondrat on 23.06.2015.
  */
-public class UsualRound extends Round {
+public class UsualRound extends Round implements Serializable {
     private int countQuestion;
     private boolean noLimit;
     private int timeQuestion;

@@ -1,7 +1,10 @@
-package com.example.zhenkondrat.brainringapp.Data;
+package com.example.zhenkondrat.brainringapp.Statist;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.example.zhenkondrat.brainringapp.Data.Client;
+import com.example.zhenkondrat.brainringapp.Data.Round;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,9 +21,13 @@ public class Statistic implements Serializable {
     private ArrayList<ArrayList<Integer>> score;
     private ArrayList<Round> round;
     private ArrayList<Integer> rowScore;
-    private Context context=null;
+    private transient Context context=null;
 
-    public Statistic(){}
+    public Statistic(){
+        this.round = null;
+        this.client = null;
+    }
+
     public Statistic(ArrayList<Round> r, ArrayList<Client> c){
         this.round = r;
         this.client = c;
@@ -30,6 +37,7 @@ public class Statistic implements Serializable {
 
     public void clearScore()
     {
+        score.clear();
         for(int i=0;i<round.size(); i++)
         {
             rowScore = new ArrayList<Integer>();
@@ -75,7 +83,19 @@ public class Statistic implements Serializable {
             Toast.makeText(context, "Not save to file", Toast.LENGTH_LONG).show();
         }
     }
+    public void saveToFileObj(String fileName, Statistic obj)
+    {
+        try {
 
+            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(obj);
+            os.close();
+            fos.close();
+        }catch(Exception ex){
+            Toast.makeText(context, "Not save to file", Toast.LENGTH_LONG).show();
+        }
+    }
     public void loadFromFile(String fileName)
     {
         try {

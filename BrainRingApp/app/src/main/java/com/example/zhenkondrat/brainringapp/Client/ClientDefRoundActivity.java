@@ -42,6 +42,9 @@ public class ClientDefRoundActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
               public void onClick(View view) {
+//                setTimer(60);
+//                startTimer();
+
                 ClientToServer.command = Command.say;
                 Thread cThread = new Thread(new ClientToServer());
                 cThread.start();
@@ -123,4 +126,5 @@ public class ClientDefRoundActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

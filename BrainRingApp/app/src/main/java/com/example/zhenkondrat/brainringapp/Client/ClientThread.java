@@ -37,10 +37,6 @@ public class ClientThread implements Runnable {
     private Handler handler = new Handler();
 
     public void Closed(){
-//        ClientToServer.command = Command.exit;
-//        ClientToServer.data= ClientPublicData.clientIP;
-//        Thread cThread = new Thread(new ClientToServer());
-//        cThread.start();
         try {
             this.finalize();
         } catch (Throwable throwable) {

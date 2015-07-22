@@ -42,7 +42,7 @@ public class ServerQuestionActivity extends Activity {
 
         textViewShowTime = (TextView) findViewById(R.id.timetv);
         num = (TextView) findViewById(R.id.textView18);
-        nextQuestion();
+        //nextQuestion();
 
         Button btn = (Button)findViewById(R.id.button23);
 
@@ -56,8 +56,9 @@ public class ServerQuestionActivity extends Activity {
 
                 ServerToClient.command = Command.start_def_time;
                 ServerToClient.data = String.valueOf( ((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getTimeQuestion());
-                Thread cThread = new Thread(new ServerToClient());
-                cThread.start();
+                PublicData.serverToClient = new ServerToClient();
+                PublicData.sTThread = new Thread(PublicData.serverToClient);
+                PublicData.sTThread.start();
             }
         };
 
@@ -97,7 +98,9 @@ public class ServerQuestionActivity extends Activity {
                 alertDialog2.setNegativeButton("Нет",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
+                                //dialog.cancel();
+                                PublicData.rounds.get(PublicData.currentRound).setFinish(true);
+                                finish();
                             }
                         });
 

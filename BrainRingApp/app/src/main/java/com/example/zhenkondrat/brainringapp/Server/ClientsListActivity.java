@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +68,8 @@ public class ClientsListActivity extends ActionBarActivity {
             @Override
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
+                Thread cThread = new Thread(new ServerToClient());
+                cThread.start();
                 UpdateList();
             }
         };
@@ -84,14 +87,14 @@ public class ClientsListActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         //display sunshy all time
-//        if (PublicData.leader.isLight())
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        else
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        if (PublicData.leader.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         PublicData.UpdateClientsInList();
         ServerToClient.command = Command.call_clients;
-        Thread cThread = new Thread(new ServerToClient());
-        cThread.start();
+
         UpdateList();
         Log.v("---", "show list");
     }
