@@ -33,6 +33,7 @@ public class ClientServer implements Runnable {
     public static Activity context;
     public String line = null;
     private boolean isEnabled = true;
+    String word="";
 
     // DESIGNATE A PORT
     public static final int SERVERPORT = 4445;
@@ -91,7 +92,7 @@ public class ClientServer implements Runnable {
                         }
                         Intent intent = null;
                         if(line!=null){
-                            String word="";
+                            word="";
                             if(line.indexOf("#")>0) {
                                 word = line;
                                 line = line.substring(0, line.indexOf("#"));
@@ -118,6 +119,11 @@ public class ClientServer implements Runnable {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
                                             ((ClientDefRoundActivity)ClientServer.context).startTimer();
                                             Toast.makeText( ((ClientDefRoundActivity)ClientServer.context), " start timer", Toast.LENGTH_LONG).show();
                                             try {
@@ -145,7 +151,24 @@ public class ClientServer implements Runnable {
                                     break;
                                 case "say_team":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
-                                    Toast.makeText( ((ClientDefRoundActivity)this.context), word+" say", Toast.LENGTH_LONG).show();
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            Toast.makeText( ((ClientDefRoundActivity)ClientServer.context), word+" say", Toast.LENGTH_LONG).show();
+                                            try {
+                                                this.finalize();
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
+                                            ((ClientDefRoundActivity)ClientServer.context).finish();
+                                        }
+                                    });
+                                    //Toast.makeText( ((ClientDefRoundActivity)this.context), word+" say", Toast.LENGTH_LONG).show();
                                     Log.d("ClientServerActivity", "Say");
                                     break;
                                 case "start":

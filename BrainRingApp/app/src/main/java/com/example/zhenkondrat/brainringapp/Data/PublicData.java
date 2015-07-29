@@ -45,4 +45,14 @@ public class PublicData {
                 }
         }
     }
+
+    public static String getClientFromIP(String ip)
+    {
+        for (int j = 0; j < PublicData.clients.size(); j++)
+            if (PublicData.clients.get(j).getIp().endsWith(ip.substring(7,ip.length())))
+            {
+                return PublicData.clients.get(j).getName();
+            }
+        return  "1";
+    }
 }

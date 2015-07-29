@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,9 @@ public class SearchServers implements Runnable  {
     private String ip;
     private Context activiy;
     private String line = null;
-    public static boolean enabled = true;
+    public  boolean enabled = true;
+
+    private Handler handler = new Handler();
 
     public SearchServers(Context context){
         ClientPublicData.servers = new ArrayList<Servers>();
@@ -56,13 +59,21 @@ public class SearchServers implements Runnable  {
         activiy = context;
     }
 
-
+    public void Closed(){
+        try {
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
     public void scan()
     {
         enabled=true;
         ip = ip.substring(0, ip.lastIndexOf('.')+1);
         for(int i=1;i<255;i++)
         {
+            //if(enabled==false) break;
+
             InetAddress serverAddr = null;
             try {
                 serverAddr = InetAddress.getByName(ip.concat(String.valueOf(i)));
@@ -94,6 +105,24 @@ public class SearchServers implements Runnable  {
             }
         }
         enabled=false;
+
+        if (ClientPublicData.servers.size()==0)
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(activiy,"Серверов не найдено, проверте подключение!", Toast.LENGTH_LONG).show();
+                try {
+                    this.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        });
         //Toast.makeText(activiy,"Серверов не найдено, проверте подключение!", Toast.LENGTH_LONG).show();
     }
 

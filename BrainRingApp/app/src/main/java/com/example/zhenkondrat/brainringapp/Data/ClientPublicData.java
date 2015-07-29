@@ -1,5 +1,7 @@
 package com.example.zhenkondrat.brainringapp.Data;
 
+import com.example.zhenkondrat.brainringapp.Client.SearchServers;
+
 import java.util.ArrayList;
 
 /**
@@ -10,4 +12,7 @@ public class ClientPublicData {
     public static Member member = new Member("None");
     public static String selectServer;
     public static String clientIP = "0.0.0.0";
+
+    public static SearchServers ss=null;
+    public static Thread ssThread = null;
 }

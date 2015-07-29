@@ -7,9 +7,11 @@ import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,12 +39,13 @@ public class ServerQuestionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_question);
-
+        PublicData.serverThread.context = this;
         PublicData.currentRound = getIntent().getExtras().getInt("id");
 
         textViewShowTime = (TextView) findViewById(R.id.timetv);
         num = (TextView) findViewById(R.id.textView18);
-        //nextQuestion();
+        PublicData.currentQuestion=0;
+        nextQuestion();
 
         Button btn = (Button)findViewById(R.id.button23);
 
@@ -154,7 +157,9 @@ public class ServerQuestionActivity extends Activity {
             alertDialog2.setNegativeButton("Нет",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
+                            //dialog.cancel();
+                            PublicData.rounds.get(PublicData.currentRound).setFinish(true);
+                            finish();
                         }
                     });
 
@@ -221,8 +226,64 @@ public class ServerQuestionActivity extends Activity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            //onBackPressed();
+            //dialog
+            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    ServerQuestionActivity.this);
+
+            // Встановлення заголовка
+            alertDialog2.setTitle("Exit");
+
+            // Встановлення повідомлення
+            try {
+
+                alertDialog2.setMessage("You want to exit?");
+
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            // Встановлення іконки
+            //alertDialog2.setIcon(R.drawable.delete);
+
+
+            // Встановлення події при негативній умові
+            alertDialog2.setNegativeButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            //Показуємо діалог
+            alertDialog2.show();
+
+            //end dialog
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  display sunshy all time
+        if (PublicData.leader.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_server_question, menu);

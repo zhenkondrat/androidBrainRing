@@ -4,7 +4,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class AgreeQuestionActivity extends ActionBarActivity {
@@ -13,6 +15,8 @@ public class AgreeQuestionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agree_question);
+        TextView tw = (TextView) findViewById(R.id.textView18);
+        //tw.setText(getIntent().getExtras().getString("talker"));
     }
 
 

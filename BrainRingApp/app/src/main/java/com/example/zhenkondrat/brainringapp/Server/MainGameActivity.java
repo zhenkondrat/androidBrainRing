@@ -406,6 +406,13 @@ public class MainGameActivity extends ActionBarActivity {
 
     }
 
+    public boolean isEndGame()
+    {
+        boolean res=false;
+
+        return res;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -437,6 +444,9 @@ public class MainGameActivity extends ActionBarActivity {
                     item.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            //if round is finish do nothink
+                            if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).isFin()) return;
+
                             Intent intent = null;
                             if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("UsualRound")>=0) {
                                 intent = new Intent(MainGameActivity.this, ServerQuestionActivity.class);
@@ -463,8 +473,12 @@ public class MainGameActivity extends ActionBarActivity {
                     if(PublicData.rounds.get(i).getClass().toString().indexOf("VaBank")>=0)
                         tv2.setText("Va Bank");
 
-                    if(PublicData.rounds.get(PublicData.currentRound).isFin())
+                    if(PublicData.rounds.get(i).isFin())
                         item.setBackgroundColor(Color.RED);
+                    else
+                        item.setBackgroundColor(Color.GREEN);
+
+
 
                     item.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     //item.setBackgroundColor(colors[0]);

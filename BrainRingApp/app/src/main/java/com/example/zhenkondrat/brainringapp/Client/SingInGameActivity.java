@@ -56,8 +56,10 @@ public class SingInGameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (isNetworkOnline(getBaseContext())) {
-                    Thread cThread = new Thread(new SearchServers(act));
-                    cThread.start();
+                    ClientPublicData.ss = new SearchServers(act);
+                    ClientPublicData.ssThread = new Thread(ClientPublicData.ss);
+                    ClientPublicData.ssThread.start();
+
                     new Thread(myThread).start();
                 }
                 else
@@ -84,7 +86,7 @@ public class SingInGameActivity extends Activity {
         @Override
         public void run() {
             // TODO Auto-generated method stub
-            while (SearchServers.enabled) {
+            while (ClientPublicData.ss.enabled) {
                 try {
                     myHandle.sendMessage(myHandle.obtainMessage());
                     Thread.sleep(1000);
@@ -135,6 +137,9 @@ public class SingInGameActivity extends Activity {
                             Log.v("push", String.valueOf(view.getTag()));
                             //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
                             startActivity(intent);
+                            ClientPublicData.ss.enabled = false;
+                            ClientPublicData.ss.Closed();
+                            ClientPublicData.ssThread.interrupt();
                         }
                     });
 

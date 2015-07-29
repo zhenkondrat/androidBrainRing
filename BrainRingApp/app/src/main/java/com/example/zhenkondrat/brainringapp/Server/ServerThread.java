@@ -7,9 +7,11 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Client.ClientDefRoundActivity;
 import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
+import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 import com.example.zhenkondrat.brainringapp.Data.Client;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
@@ -103,18 +105,43 @@ public class ServerThread implements Runnable {
                                     out.println(PublicData.leader.getGameName());
                                     break;
                                 case "say":
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            Toast.makeText(((ServerQuestionActivity)context), "Say" + client.getLocalAddress().toString(), Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent( (context), AgreeQuestionActivity.class);
 
-                                    for(int i =0; i<PublicData.clients.size(); i++)
-                                    {
-                                        if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(4,client.getLocalAddress().toString().length())))
-                                        {
-                                            ServerToClient.command = Command.say_team;
-                                            ServerToClient.data = PublicData.clients.get(i).getName();
-                                            Thread cThread = new Thread(new ServerToClient());
-                                            cThread.start();
-                                            Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
+                                            String team = PublicData.getClientFromIP(client.getLocalAddress().toString());
+                                            Log.v("agree", "aaaaaaaa-"+team);
+                                            Toast.makeText(((ServerQuestionActivity)context), team, Toast.LENGTH_LONG).show();
+
+                                            intent.putExtra("talker", team );
+                                            context.startActivity(intent);
+                                            try {
+                                                this.finalize();
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
+
+                                            for(int i =0; i<PublicData.clients.size(); i++)
+                                            {
+                                                if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(4,client.getLocalAddress().toString().length())))
+                                                {
+                                                    ServerToClient.command = Command.say_team;
+                                                    ServerToClient.data = PublicData.clients.get(i).getName();
+                                                    Thread cThread = new Thread(new ServerToClient());
+                                                    cThread.start();
+                                                    Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
+                                                }
+                                            }
                                         }
-                                    }
+                                    });
+
                                     break;
                                 case "set_ball":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
