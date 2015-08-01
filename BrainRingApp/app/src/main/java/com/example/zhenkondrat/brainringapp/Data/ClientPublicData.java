@@ -1,6 +1,7 @@
 package com.example.zhenkondrat.brainringapp.Data;
 
-import com.example.zhenkondrat.brainringapp.Client.SearchServers;
+import com.example.zhenkondrat.brainringapp.Client.data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Client.data.SearchServers;
 
 import java.util.ArrayList;
 
@@ -15,4 +16,7 @@ public class ClientPublicData {
 
     public static SearchServers ss=null;
     public static Thread ssThread = null;
+
+    public static ClientToServer cts = null;
+    public static Thread ctsThread = null;
 }

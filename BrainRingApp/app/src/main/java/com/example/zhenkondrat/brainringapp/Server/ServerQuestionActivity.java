@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.CountDownTimer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -13,16 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.Data.UsualRound;
-import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class ServerQuestionActivity extends Activity {
@@ -32,8 +29,11 @@ public class ServerQuestionActivity extends Activity {
     private long timeBlinkInMilliseconds; // start time of start blinking
     private boolean blink; // controls the blinking .. on and off
     private CountDownTimer countDownTimer; // built in android class
+    private boolean timerCancel; //fleg if timer work calceled
     private TextView textViewShowTime; // will show the time
     private TextView num;
+
+    private boolean observer = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +53,15 @@ public class ServerQuestionActivity extends Activity {
             @Override
             public void onClick(View v) {
                   textViewShowTime.setTextAppearance(getApplicationContext(),
-                            R.style.Base_TextAppearance_AppCompat_Inverse);
-                    setTimer();
-                    startTimer();
+                          R.style.Base_TextAppearance_AppCompat_Inverse);
 
                 ServerToClient.command = Command.start_def_time;
                 ServerToClient.data = String.valueOf( ((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getTimeQuestion());
                 PublicData.serverToClient = new ServerToClient();
                 PublicData.sTThread = new Thread(PublicData.serverToClient);
                 PublicData.sTThread.start();
+                Log.d("SQA", "st--"+ServerToClient.data);
+                new Thread(myThread).start();
             }
         };
 
@@ -115,6 +115,40 @@ public class ServerQuestionActivity extends Activity {
             }
         });
 
+    }
+
+    private Runnable myThread = new Runnable() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            while (observer) {
+                try {
+                    myHandle.sendMessage(myHandle.obtainMessage());
+                    Thread.sleep(500);
+                } catch (Throwable t) {
+                }
+            }
+            try {
+                this.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+
+        Handler myHandle = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                setTimer();
+                startTimer();
+                observer=false;
+            }
+        };
+    };
+
+    public void clientSay()
+    {
+        timerCancel = true;
     }
 
     public void nextQuestion()
@@ -176,12 +210,13 @@ public class ServerQuestionActivity extends Activity {
             time = ((UsualRound)PublicData.rounds.get(PublicData.currentRound)).getTimeQuestion();
         };
 
-        totalTimeCountInMilliseconds = /*60 * */ time * 1000;//sec
+        totalTimeCountInMilliseconds = time * 1000;//sec
 
         timeBlinkInMilliseconds = 30 * 1000;
     }
 
     private void startTimer() {
+        timerCancel = false;
         countDownTimer = new CountDownTimer(totalTimeCountInMilliseconds, 500) {
             // 500 means, onTick function will be called at every 500
             // milliseconds
@@ -191,11 +226,6 @@ public class ServerQuestionActivity extends Activity {
                 long seconds = leftTimeInMilliseconds / 1000;
 
                 if (leftTimeInMilliseconds < timeBlinkInMilliseconds) {
-//                   timeBlinkInMilliseconds textViewShowTime.setTextAppearance(getApplicationContext(),
-//                            R.style.Base_TextAppearance_AppCompat_Display4);
-                    // change the style of the textview .. giving a red
-                    // alert style
-
                     if (blink) {
                         textViewShowTime.setVisibility(View.VISIBLE);
                         // if blink is true, textview will be visible
@@ -215,11 +245,9 @@ public class ServerQuestionActivity extends Activity {
             @Override
             public void onFinish() {
                 // this function will be called when the timecount is finished
+                if(!timerCancel)
                 textViewShowTime.setText("Время истекло!");
                 textViewShowTime.setVisibility(View.VISIBLE);
-                //buttonStartTime.setVisibility(View.VISIBLE);
-                //buttonStopTime.setVisibility(View.GONE);
-                //edtTimerValue.setVisibility(View.VISIBLE);
             }
 
         }.start();
@@ -228,41 +256,41 @@ public class ServerQuestionActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            //onBackPressed();
-            //dialog
-            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-                    ServerQuestionActivity.this);
-
-            // Встановлення заголовка
-            alertDialog2.setTitle("Exit");
-
-            // Встановлення повідомлення
-            try {
-
-                alertDialog2.setMessage("You want to exit?");
-
-            } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            // Встановлення іконки
-            //alertDialog2.setIcon(R.drawable.delete);
-
-
-            // Встановлення події при негативній умові
-            alertDialog2.setNegativeButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-            //Показуємо діалог
-            alertDialog2.show();
-
-            //end dialog
-        }
+//        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+//            //onBackPressed();
+//            //dialog
+//            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+//                    ServerQuestionActivity.this);
+//
+//            // Встановлення заголовка
+//            alertDialog2.setTitle("Exit");
+//
+//            // Встановлення повідомлення
+//            try {
+//
+//                alertDialog2.setMessage("You want to exit?");
+//
+//            } catch (Exception e1) {
+//                // TODO Auto-generated catch block
+//                e1.printStackTrace();
+//            }
+//            // Встановлення іконки
+//            //alertDialog2.setIcon(R.drawable.delete);
+//
+//
+//            // Встановлення події при негативній умові
+//            alertDialog2.setNegativeButton("OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//
+//            //Показуємо діалог
+//            alertDialog2.show();
+//
+//            //end dialog
+//        }
         return super.onKeyDown(keyCode, event);
     }
 

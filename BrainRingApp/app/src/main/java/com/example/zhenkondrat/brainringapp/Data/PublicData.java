@@ -2,8 +2,8 @@ package com.example.zhenkondrat.brainringapp.Data;
 
 import android.util.Log;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientThread;
-import com.example.zhenkondrat.brainringapp.Server.ServerThread;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerThread;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerToClient;
 
 import java.util.ArrayList;
 
@@ -48,11 +48,23 @@ public class PublicData {
 
     public static String getClientFromIP(String ip)
     {
+        Log.v("PublicDta", "-=-=-"+String.valueOf(PublicData.clients.size()));
+        Log.v("PublicDta", "get 0-=-=-"+PublicData.clients.get(0).getIp());
         for (int j = 0; j < PublicData.clients.size(); j++)
             if (PublicData.clients.get(j).getIp().endsWith(ip.substring(7,ip.length())))
             {
                 return PublicData.clients.get(j).getName();
             }
         return  "1";
+    }
+
+    public static void stcClose()
+    {
+        if (sTThread != null) {
+            Thread dummy = sTThread;
+            serverToClient.Close();
+            sTThread = null;
+            dummy.interrupt();
+        }
     }
 }

@@ -16,23 +16,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientServer;
-import com.example.zhenkondrat.brainringapp.Client.SearchServers;
-import com.example.zhenkondrat.brainringapp.Client.SingInGameActivity;
-import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.R;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class ClientsListActivity extends ActionBarActivity {
     int i;//index from cycle
@@ -53,7 +40,7 @@ public class ClientsListActivity extends ActionBarActivity {
             while (observer) {
                 try {
                     myHandle.sendMessage(myHandle.obtainMessage());
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                 } catch (Throwable t) {
                 }
             }
@@ -68,8 +55,10 @@ public class ClientsListActivity extends ActionBarActivity {
             @Override
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
-                Thread cThread = new Thread(new ServerToClient());
-                cThread.start();
+                PublicData.serverToClient.command = Command.call_clients;
+                PublicData.serverToClient = new ServerToClient();
+                PublicData.sTThread = new Thread(PublicData.serverToClient);
+                PublicData.sTThread.start();
                 UpdateList();
             }
         };
@@ -93,8 +82,6 @@ public class ClientsListActivity extends ActionBarActivity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         PublicData.UpdateClientsInList();
-        ServerToClient.command = Command.call_clients;
-
         UpdateList();
         Log.v("---", "show list");
     }
@@ -113,26 +100,14 @@ private void  UpdateList(){
         LayoutInflater ltInflater = getLayoutInflater();
 
 
-
         for (i = 0; i < PublicData.clients.size(); i++) {
             if (PublicData.clients.get(i).getName()!="") {
                 View item = ltInflater.inflate(R.layout.itemclient, linLayout, false);
                 TextView tv1 = (TextView) item.findViewById(R.id.tvIDnew);
                 //  TextView tv2 = (TextView) item.findViewById(R.id.tvType);
                 item.setTag(i);
-                item.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                            Intent intent = new Intent(SingInGameActivity.this, TeamInGameActivity.class);
-//                            ClientPublicData.selectServer = String.valueOf(view.getTag());
-//                            Log.v("push", String.valueOf(view.getTag()));
-//                            //intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
-//                            startActivity(intent);
-                    }
-                });
 
                 tv1.setText(PublicData.clients.get(i).getName());
-                //  tv2.setText(PublicData.clients.get(i).getIp());
 
                 Button btn = (Button) item.findViewById(R.id.button20);
                 btn.setTag(i);
@@ -140,10 +115,13 @@ private void  UpdateList(){
                     @Override
                     public void onClick(View view) {
 
-                        ServerToClient.command = Command.delete_client;
-                        ServerToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
-                        Thread cThread = new Thread(new ServerToClient());
-                        cThread.start();
+                        PublicData.serverToClient.command = Command.delete_client;
+                        PublicData.serverToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
+                        PublicData.stcClose();
+
+                        PublicData.serverToClient = new ServerToClient();
+                        PublicData.sTThread = new Thread(PublicData.serverToClient);
+                        PublicData.sTThread.start();
 
                         PublicData.clients.remove(Integer.parseInt(view.getTag().toString()));
                         Log.v("delete el", String.valueOf(Integer.parseInt(view.getTag().toString())));
@@ -156,10 +134,14 @@ private void  UpdateList(){
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ServerToClient.command = Command.accept_cleint;
-                        ServerToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
-                        Thread cThread = new Thread(new ServerToClient());
-                        cThread.start();
+
+                        PublicData.serverToClient.command = Command.accept_client;
+                        PublicData.serverToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
+                        PublicData.stcClose();
+
+                        PublicData.serverToClient = new ServerToClient();
+                        PublicData.sTThread = new Thread(PublicData.serverToClient);
+                        PublicData.sTThread.start();
 
                         PublicData.clients.get(Integer.parseInt(view.getTag().toString())).setZayavka(3);
                         Log.v("green el", String.valueOf(Integer.parseInt(view.getTag().toString())));
@@ -172,10 +154,15 @@ private void  UpdateList(){
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ServerToClient.command = Command.wait_client;
-                        ServerToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
-                        Thread cThread = new Thread(new ServerToClient());
-                        cThread.start();
+
+                        PublicData.serverToClient.command = Command.wait_client;
+                        PublicData.serverToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
+                        PublicData.stcClose();
+
+                        PublicData.serverToClient = new ServerToClient();
+                        PublicData.sTThread = new Thread(PublicData.serverToClient);
+                        PublicData.sTThread.start();
+
 
                         PublicData.clients.get(Integer.parseInt(view.getTag().toString())).setZayavka(1);
                         Log.v("cyan el", String.valueOf(Integer.parseInt(view.getTag().toString())));
@@ -205,6 +192,17 @@ private void  UpdateList(){
         }
     }
 }
+
+    @Override
+    protected void onStop()
+    {
+        // TODO Auto-generated method stub
+        super.onStop();
+        PublicData.serverToClient.command = Command.none;
+        PublicData.serverToClient.data = "";
+        observer=false;
+        Log.v("MyApp", "onStop");
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

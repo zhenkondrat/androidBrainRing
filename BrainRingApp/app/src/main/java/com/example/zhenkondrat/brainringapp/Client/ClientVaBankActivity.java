@@ -3,14 +3,15 @@ package com.example.zhenkondrat.brainringapp.Client;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Client.data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
@@ -75,6 +76,16 @@ public class ClientVaBankActivity extends Activity {
         //end dialog
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

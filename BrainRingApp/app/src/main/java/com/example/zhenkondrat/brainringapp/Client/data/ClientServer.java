@@ -1,4 +1,4 @@
-package com.example.zhenkondrat.brainringapp.Client;
+package com.example.zhenkondrat.brainringapp.Client.data;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,27 +9,21 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Data.Client;
-import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Client.ClientDefRoundActivity;
+import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
+import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.example.zhenkondrat.brainringapp.Data.Command;
-import com.example.zhenkondrat.brainringapp.Server.ServerThread;
-
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * Created by zhEnkondrat on 06.07.2015.
  */
 public class ClientServer implements Runnable {
     // DEFAULT IP
-    public static String SERVERIP = "192.168.231.101";
+    public static String SERVERIP = "0.0.0.1";
     public static Activity context;
     public String line = null;
     private boolean isEnabled = true;
@@ -53,6 +47,12 @@ public class ClientServer implements Runnable {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+//
+//        if (myThread != null) {
+//            Thread dummy = myThread;
+//            myThread = null;
+//            dummy.interrupt();
+//        }
     }
 
     public void run() {
@@ -79,6 +79,8 @@ public class ClientServer implements Runnable {
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
+//                        line = in.readLine();
+//                        Log.v("ClientServer-----", line);
                         while ((line = in.readLine()) != null) {
                             Log.v("ServerActivity-----", line);
 
@@ -104,12 +106,12 @@ public class ClientServer implements Runnable {
                                     break;
                                 case "start_vabank_round":
                                     intent = new Intent( ((TeamInGameActivity)this.context), ClientVaBankActivity.class);
-                                    Log.v("aaaaaa", "aaaaaaaa");
+                                    Log.v("vabank", "aaaaaaaa");
                                     context.startActivity(intent);
                                     break;
                                 case "start_def_round":
                                     intent = new Intent( ((TeamInGameActivity)this.context), ClientDefRoundActivity.class);
-                                    Log.v("aaaaaa", "aaaaaaaa");
+                                    Log.v("def", "aaaaaaaa");
                                     context.startActivity(intent);
                                     break;
                                 case "start_def_time":
@@ -141,7 +143,7 @@ public class ClientServer implements Runnable {
                                     word = word.substring(word.indexOf("#")+1 , word.length());
                                     Toast.makeText( ((TeamInGameActivity)this.context), word+". Вашая заявка отклонена", Toast.LENGTH_LONG).show();
                                     break;
-                                case "accept_client":
+                                case "accept_cleint":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
                                     Toast.makeText( ((TeamInGameActivity)this.context), word+". Вашая заявка принята", Toast.LENGTH_LONG).show();
                                     break;
@@ -159,6 +161,7 @@ public class ClientServer implements Runnable {
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
+                                            ((ClientDefRoundActivity)ClientServer.context).stopTimer();
                                             Toast.makeText( ((ClientDefRoundActivity)ClientServer.context), word+" say", Toast.LENGTH_LONG).show();
                                             try {
                                                 this.finalize();

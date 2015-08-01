@@ -3,24 +3,21 @@ package com.example.zhenkondrat.brainringapp.Client;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.CountDownTimer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Client.data.ClientServer;
+import com.example.zhenkondrat.brainringapp.Client.data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Command;
-import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
-import com.example.zhenkondrat.brainringapp.Data.UsualRound;
 import com.example.zhenkondrat.brainringapp.R;
-import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
 
 public class ClientDefRoundActivity extends Activity {
     // CountDownTimer
@@ -45,8 +42,7 @@ public class ClientDefRoundActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
               public void onClick(View view) {
-//                setTimer(60);
-//                startTimer();
+                //stopTimer();
 
                 ClientToServer.command = Command.say;
                 Thread cThread = new Thread(new ClientToServer());
@@ -54,6 +50,16 @@ public class ClientDefRoundActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     public void setTimer(int time) {
@@ -106,43 +112,47 @@ public class ClientDefRoundActivity extends Activity {
 
     }
 
+    public void stopTimer(){
+        countDownTimer.cancel();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            //onBackPressed();
-            //dialog
-            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-                    ClientDefRoundActivity.this);
-
-            // Встановлення заголовка
-            alertDialog2.setTitle("Exit");
-
-            // Встановлення повідомлення
-            try {
-
-                alertDialog2.setMessage("You want to exit?");
-
-            } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            // Встановлення іконки
-            //alertDialog2.setIcon(R.drawable.delete);
-
-
-            // Встановлення події при негативній умові
-            alertDialog2.setNegativeButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-            //Показуємо діалог
-            alertDialog2.show();
-
-            //end dialog
-        }
+//        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+//            //onBackPressed();
+//            //dialog
+//            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+//                    ClientDefRoundActivity.this);
+//
+//            // Встановлення заголовка
+//            alertDialog2.setTitle("Exit");
+//
+//            // Встановлення повідомлення
+//            try {
+//
+//                alertDialog2.setMessage("You want to exit?");
+//
+//            } catch (Exception e1) {
+//                // TODO Auto-generated catch block
+//                e1.printStackTrace();
+//            }
+//            // Встановлення іконки
+//            //alertDialog2.setIcon(R.drawable.delete);
+//
+//
+//            // Встановлення події при негативній умові
+//            alertDialog2.setNegativeButton("OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//
+//            //Показуємо діалог
+//            alertDialog2.show();
+//
+//            //end dialog
+//        }
         return super.onKeyDown(keyCode, event);
     }
 

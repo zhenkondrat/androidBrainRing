@@ -12,11 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientThread;
-import com.example.zhenkondrat.brainringapp.Client.SearchServers;
+import com.example.zhenkondrat.brainringapp.Client.data.SearchServers;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.Statist.Statistic;
-import com.example.zhenkondrat.brainringapp.Server.ServerThread;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerThread;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -69,21 +68,21 @@ public class TestActivity extends ActionBarActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!ClientThread.connected) {
-                    WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
-
-                    WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-                    int myIp = myWifiInfo.getIpAddress();
-                    //ip = SearchServers.toIP(myIp);
-                    String s = "";
-                    s = SearchServers.toIP(myIp);
-                    ClientThread.serverIpAddress = s;
-                    Log.d("-------", s);
-                    if (!ClientThread.serverIpAddress.equals("")) {
-                        Thread cThread = new Thread(new ClientThread());
-                        cThread.start();
-                    }
-                }
+//                if (!ClientThread.connected) {
+//                    WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+//
+//                    WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+//                    int myIp = myWifiInfo.getIpAddress();
+//                    //ip = SearchServers.toIP(myIp);
+//                    String s = "";
+//                    s = SearchServers.toIP(myIp);
+//                    ClientThread.serverIpAddress = s;
+//                    Log.d("-------", s);
+//                    if (!ClientThread.serverIpAddress.equals("")) {
+//                        Thread cThread = new Thread(new ClientThread());
+//                        cThread.start();
+//                    }
+//                }
             }
         });
 

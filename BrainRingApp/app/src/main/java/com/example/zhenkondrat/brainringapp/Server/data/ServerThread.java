@@ -1,48 +1,40 @@
-package com.example.zhenkondrat.brainringapp.Server;
+package com.example.zhenkondrat.brainringapp.Server.data;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Client.ClientDefRoundActivity;
-import com.example.zhenkondrat.brainringapp.Client.ClientVaBankActivity;
-import com.example.zhenkondrat.brainringapp.Client.TeamInGameActivity;
 import com.example.zhenkondrat.brainringapp.Data.Client;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Server.AgreeQuestionActivity;
+import com.example.zhenkondrat.brainringapp.Server.ServerQuestionActivity;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * Created by zhEnkondrat on 18.06.2015.
  */
 public class ServerThread implements Runnable {
-    // DEFAULT IP
-    public static String SERVERIP = "192.168.231.101";
-    Context context;
+    // default IP
+    public static String SERVERIP = "0.0.0.0";
+    // for open&show data on activity
+    public static Context context;
+    // send data
     public String line = null;
-
-    // DESIGNATE A PORT
+    // PORT
     public static final int SERVERPORT = 4444;
-
+    // for use UI-thread
     private Handler handler = new Handler();
-
+    //socket for connecing client
     private ServerSocket serverSocket;
 
     public void Closed(){
@@ -58,48 +50,44 @@ public class ServerThread implements Runnable {
 
         try {
             if (SERVERIP != null) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                });
 
-                Log.v("Listening on IP1: ", SERVERIP);
+                Log.v("ServerThread ip: ", SERVERIP);
                 serverSocket = new ServerSocket(SERVERPORT);
                 while (true) {
                     // LISTEN FOR INCOMING CLIENTS
                     final Socket client = serverSocket.accept();
                     line = null;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-                        }
-                    });
+                    //cient accept
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                        while ((line = in.readLine()) != null)
-                        {
-                            Log.d("ServerActivity", line);
+//                        while ((line = in.readLine()) )
+//                        {
+//                            Log.v("ServerThread get data", line);
+//                            break;
+//                        }
 
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
+                        line = in.readLine();
 
-                                }
-                            });
-                            break;
-                        }
-
+                        // client data parse
                         if(line!=null) {
+                            Log.v("ServerThread get data", line);
                             String word="";
+                            //this is constructor expression
                             if(line.indexOf("#")>0) {
                                 word = line;
                                 line = line.substring(0, line.indexOf("#"));
                             }
+
+                            //select the command
                             switch (line) {
                                 case "connect":
+                                    //send client name of the game
                                     PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client
                                             .getOutputStream())), true);
                                     out.println(PublicData.leader.getGameName());
@@ -113,11 +101,12 @@ public class ServerThread implements Runnable {
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
+                                            //server print team_say
                                             Toast.makeText(((ServerQuestionActivity)context), "Say" + client.getLocalAddress().toString(), Toast.LENGTH_LONG).show();
                                             Intent intent = new Intent( (context), AgreeQuestionActivity.class);
-
+                                            ((ServerQuestionActivity)context).clientSay();
                                             String team = PublicData.getClientFromIP(client.getLocalAddress().toString());
-                                            Log.v("agree", "aaaaaaaa-"+team);
+                                            Log.v("ServerThread", "Team-"+team);
                                             Toast.makeText(((ServerQuestionActivity)context), team, Toast.LENGTH_LONG).show();
 
                                             intent.putExtra("talker", team );
@@ -128,6 +117,7 @@ public class ServerThread implements Runnable {
                                                 throwable.printStackTrace();
                                             }
 
+                                            //clients print team_say
                                             for(int i =0; i<PublicData.clients.size(); i++)
                                             {
                                                 if (PublicData.clients.get(i).getIp().endsWith(client.getLocalAddress().toString().substring(4,client.getLocalAddress().toString().length())))
@@ -136,7 +126,7 @@ public class ServerThread implements Runnable {
                                                     ServerToClient.data = PublicData.clients.get(i).getName();
                                                     Thread cThread = new Thread(new ServerToClient());
                                                     cThread.start();
-                                                    Log.d("ClientServerActivity", "Say" + client.getLocalAddress().toString());
+                                                    Log.v("ServerThread", "on client Say client" + client.getLocalAddress().toString());
                                                 }
                                             }
                                         }
@@ -153,19 +143,19 @@ public class ServerThread implements Runnable {
                                         }
                                     }
                                     PublicData.currentScores.set(i,Integer.parseInt(word));
-                                    Log.d("server thread", "set " + word);
+                                    Log.v("ServerThread", "set ball" + word);
                                     break;
                                 case "exit":
                                     word = word.substring(word.indexOf("#")+1 , word.length());
                                     removeClient(word);
-                                    Log.d("server thread", "set " + word);
+                                    Log.v("ServerThread", "exit " + word);
                                     break;
                                 default:
                                     if(!inTheClient(line.substring(line.indexOf("@") + 1, line.length())))
                                     PublicData.clients.add(new Client(line.substring(0, line.indexOf("@")), line.substring(line.indexOf("@") + 1, line.length())));
 
-                                    Log.v("client", line.substring(0, line.indexOf("@")));
-                                    Log.v("client", line.substring(line.indexOf("@") + 2, line.length()));
+                                    Log.v("ServerThread", line.substring(0, line.indexOf("@")));
+                                    Log.v("ServerThread", line.substring(line.indexOf("@") + 2, line.length()));
                             }
                         }
                         //break;
@@ -173,7 +163,7 @@ public class ServerThread implements Runnable {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Log.v("","ServerThread. Connection interrupted. Please reconnect your phones.");
+                                Log.v("ServerThread."," Connection interrupted. Please reconnect your phones.");
                             }
                         });
                         e.printStackTrace();
@@ -183,7 +173,7 @@ public class ServerThread implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("","Couldn't detect internet connection.");
+                        Log.v("ServerThread.","Couldn't detect internet connection.");
                     }
                 });
             }
@@ -191,7 +181,7 @@ public class ServerThread implements Runnable {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("","Error");
+                    Log.v("ServerThread.","Error");
                 }
             });
             e.printStackTrace();
@@ -215,42 +205,6 @@ public class ServerThread implements Runnable {
             if(PublicData.clients.get(i).getIp().equals(ip))
                 PublicData.clients.remove(i);
         }
-    }
-    // GETS THE IP ADDRESS OF YOUR PHONE'S NETWORK
-    private String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.getHostAddress().toString(); }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e("ServerActivity", ex.toString());
-        }
-        return null;
-    }
-
-    public String getIP(){
-        WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-
-        WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-        int myIp = myWifiInfo.getIpAddress();
-
-        int intMyIp3 = myIp/0x1000000;
-        int intMyIp3mod = myIp%0x1000000;
-
-        int intMyIp2 = intMyIp3mod/0x10000;
-        int intMyIp2mod = intMyIp3mod%0x10000;
-
-        int intMyIp1 = intMyIp2mod/0x100;
-        int intMyIp0 = intMyIp2mod%0x100;
-
-        return String.valueOf(intMyIp0)
-                + "." + String.valueOf(intMyIp1)
-                + "." + String.valueOf(intMyIp2)
-                + "." + String.valueOf(intMyIp3);
     }
 
 }

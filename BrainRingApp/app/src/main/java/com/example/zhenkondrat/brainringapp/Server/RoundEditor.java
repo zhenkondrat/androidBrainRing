@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
+import com.example.zhenkondrat.brainringapp.Data.PublicData;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class RoundEditor extends ActionBarActivity {
@@ -39,6 +41,15 @@ public class RoundEditor extends ActionBarActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  display sunshy all time
+        if (PublicData.leader.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

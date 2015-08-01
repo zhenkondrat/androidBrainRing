@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhenkondrat.brainringapp.Client.data.SearchServers;
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.R;
-import com.example.zhenkondrat.brainringapp.Server.CreateGameActivity;
-
-import java.util.ArrayList;
 
 
 public class SingInGameActivity extends Activity {

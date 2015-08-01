@@ -5,20 +5,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerToClient;
 import com.example.zhenkondrat.brainringapp.R;
 
 public class ClientsListActivity extends Activity {
@@ -71,10 +72,10 @@ public class ClientsListActivity extends Activity {
     protected void onResume() {
         super.onResume();
         //display sunshy all time
-//        if (PublicData.leader.isLight())
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        else
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 //        PublicData.UpdateClientsInList();
 //        ServerToClient.command = Command.call_clients;
@@ -141,7 +142,7 @@ private void  UpdateList(){
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ServerToClient.command = Command.accept_cleint;
+                        ServerToClient.command = Command.accept_client;
                         ServerToClient.data = PublicData.clients.get(Integer.parseInt(view.getTag().toString())).getIp();
                         Thread cThread = new Thread(new ServerToClient());
                         cThread.start();

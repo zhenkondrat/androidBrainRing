@@ -12,11 +12,12 @@ public enum Command {
         start_def_time,
         start_vabank_round,
         call_clients,
+    first_connect,
     say,
     set_ball,
     say_team,
     exit,
     delete_client,
-    accept_cleint,
+    accept_client,
     wait_client
         }

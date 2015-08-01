@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
@@ -19,6 +20,15 @@ public class AgreeQuestionActivity extends ActionBarActivity {
         //tw.setText(getIntent().getExtras().getString("talker"));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  display sunshy all time
+        if (PublicData.leader.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

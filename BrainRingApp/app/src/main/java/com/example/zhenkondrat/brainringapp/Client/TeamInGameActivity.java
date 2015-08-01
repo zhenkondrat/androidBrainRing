@@ -2,39 +2,36 @@ package com.example.zhenkondrat.brainringapp.Client;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zhenkondrat.brainringapp.Client.data.ClientServer;
+import com.example.zhenkondrat.brainringapp.Client.data.ClientToServer;
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
-import com.example.zhenkondrat.brainringapp.Data.PublicData;
+import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.R;
-import com.example.zhenkondrat.brainringapp.Server.RoundEditor;
 
 
 public class TeamInGameActivity extends Activity {
 
     private TeamInGameActivity tiga;
     private Button btnExit;
-    private ClientThread ct;
+    private ClientToServer cts;
     private ClientServer cs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_in_game);
-//set team name
+        //set team name
         tiga = this;
         ClientServer.context=this;
         TextView tv = (TextView)findViewById(R.id.textView3);
@@ -43,27 +40,24 @@ public class TeamInGameActivity extends Activity {
         btnExit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ct.Closed();
+                //cts.Closed();
                 cs.Closed();
             }
         });
-//send mess
+        //send mess
         Button btn = (Button) findViewById(R.id.button9);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                while (!ClientThread.connected) {
-                    String s = "";
-                    s = ClientPublicData.selectServer;
-                    ClientThread.serverIpAddress = s;
-                    Log.d("TeamInGame IPserv", s);
-                    if (!ClientThread.serverIpAddress.equals("")) {
-                        ct=new ClientThread();
-                        Thread cThread = new Thread(ct);
-                        ClientThread.data = ClientPublicData.member.getName()+"@"+ClientPublicData.clientIP;
-                        cThread.start();
+               Log.d("TeamInGame IPserv", ClientPublicData.selectServer);
+                    if (!ClientPublicData.selectServer.equals("")) {
+                        ClientPublicData.cts = new ClientToServer();
+                        ClientPublicData.cts.command = Command.first_connect;
+                        ClientPublicData.cts.data = ClientPublicData.member.getName()+"@"+ClientPublicData.clientIP;
+                        ClientPublicData.ctsThread = new Thread(ClientPublicData.cts);
+                        ClientPublicData.ctsThread.start();
                     }
-                }
+
                 ClientServer.context = tiga;//getBaseContext();
                 cs = new ClientServer();
                 Thread fst = new Thread(cs);
@@ -74,6 +68,16 @@ public class TeamInGameActivity extends Activity {
 
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //display sunshy all time
+        if (ClientPublicData.member.isLight())
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override

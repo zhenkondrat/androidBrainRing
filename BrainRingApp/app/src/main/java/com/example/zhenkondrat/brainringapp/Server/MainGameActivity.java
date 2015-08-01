@@ -24,18 +24,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.zhenkondrat.brainringapp.Client.SearchServers;
-import com.example.zhenkondrat.brainringapp.Data.ClientToServer;
+import com.example.zhenkondrat.brainringapp.Client.data.SearchServers;
 import com.example.zhenkondrat.brainringapp.Data.Command;
 import com.example.zhenkondrat.brainringapp.Data.PublicData;
-import com.example.zhenkondrat.brainringapp.Data.ServerToClient;
-import com.example.zhenkondrat.brainringapp.Data.VaBankRound;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerToClient;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerThread;
 import com.example.zhenkondrat.brainringapp.Statist.Statistic;
 import com.example.zhenkondrat.brainringapp.R;
 
@@ -45,18 +43,17 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class MainGameActivity extends ActionBarActivity {
-    final int MENU_DEL = 1;
-    int delId=0;
-    Statistic st=null;
+    private final int MENU_DEL = 1;
+    private int delId=0;
+    private Statistic st=null;
+    int z=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
 
-        ServerThread.SERVERIP = getLocalIpAddress();
         WifiManager myWifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
-
         WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
         int myIp = myWifiInfo.getIpAddress();
         ServerThread.SERVERIP = SearchServers.toIP(myIp);
@@ -336,21 +333,7 @@ public class MainGameActivity extends ActionBarActivity {
 
     }
 
-    // GETS THE IP ADDRESS OF YOUR PHONE'S NETWORK
-    private String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.getHostAddress().toString(); }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e("ServerActivity", ex.toString());
-        }
-        return null;
-    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -451,7 +434,8 @@ public class MainGameActivity extends ActionBarActivity {
                             if(PublicData.rounds.get(Integer.parseInt(view.getTag().toString())).getClass().toString().indexOf("UsualRound")>=0) {
                                 intent = new Intent(MainGameActivity.this, ServerQuestionActivity.class);
                                 intent.putExtra("id", Integer.parseInt(view.getTag().toString()));
-
+                                        z++;
+                                        Log.v("defRound", "z="+String.valueOf(z));
                                 ServerToClient.command = Command.start_def_round;
                                 Thread cThread = new Thread(new ServerToClient());
                                 cThread.start();

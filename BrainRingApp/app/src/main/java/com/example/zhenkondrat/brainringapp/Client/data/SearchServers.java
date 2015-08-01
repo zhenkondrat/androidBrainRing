@@ -1,23 +1,15 @@
-package com.example.zhenkondrat.brainringapp.Client;
+package com.example.zhenkondrat.brainringapp.Client.data;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zhenkondrat.brainringapp.Data.ClientPublicData;
 import com.example.zhenkondrat.brainringapp.Data.Servers;
-import com.example.zhenkondrat.brainringapp.R;
-import com.example.zhenkondrat.brainringapp.Server.ServerThread;
+import com.example.zhenkondrat.brainringapp.Server.data.ServerThread;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,12 +19,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 /**
  * Created by zhEnkondrat on 24.06.2015.
@@ -48,9 +37,8 @@ public class SearchServers implements Runnable  {
     public SearchServers(Context context){
         ClientPublicData.servers = new ArrayList<Servers>();
         Log.d("SearchServer", "Create");
-        //ip = getLocalIpAddress();
-        WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
+        WifiManager myWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
         int myIp = myWifiInfo.getIpAddress();
         ip = toIP(myIp);
@@ -70,10 +58,11 @@ public class SearchServers implements Runnable  {
     {
         enabled=true;
         ip = ip.substring(0, ip.lastIndexOf('.')+1);
-        for(int i=1;i<255;i++)
+        int i=0;
+        while(enabled && i<=255)
         {
             //if(enabled==false) break;
-
+            i++;
             InetAddress serverAddr = null;
             try {
                 serverAddr = InetAddress.getByName(ip.concat(String.valueOf(i)));
@@ -91,11 +80,13 @@ public class SearchServers implements Runnable  {
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                while ((line = in.readLine()) != null)
-                {
-                    Log.d("Searchsever", line);
-                    break;
-                }
+                line = in.readLine();
+                Log.v("Searchsever", line);
+//                while ((line = in.readLine()) != null)
+//                {
+//                    Log.d("Searchsever", line);
+//                    break;
+//                }
                 socket.close();
                 ClientPublicData.servers.add(new Servers(line, ip.concat(String.valueOf(i))));//ip.concat(String.valueOf(i)));
                 Log.d("connect", ip.concat(String.valueOf(i)));
